@@ -1,11 +1,16 @@
-// ownerSchema.js
 
 const mongoose = require('mongoose')
 
 const donater = new mongoose.Schema({
+    requestorId:String,
     bloodGroup: String,
     name: String,
     phoneNumber:String,
+    donorsResponse:[{
+        donorId:String,
+        phoneNumber:Number,
+        bloodGroup:String,
+    }],
     location: {
         longitude: Number,
         latitude: Number
