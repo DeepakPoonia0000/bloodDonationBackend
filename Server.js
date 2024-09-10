@@ -4,6 +4,7 @@ const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, ge
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
+const { adminVerifyToken, deleteUser, approveStatus, pendingUsers, loginAdmin } = require('./controller/AdminController');
 
 
 const app = express();
@@ -16,12 +17,18 @@ app.use(express.json());
 
 app.post('/addUser', addUser);
 app.post('/loginUser', loginUser);
-app.post('/getLocation', verifyToken, getBloodRequests)
+// app.post('/getLocation', verifyToken, getBloodRequests)
+app.get('/getLocation', verifyToken, getBloodRequests)
 app.post('/sendBloodRequest', verifyToken, sendBloodRequests)
 app.post('/getUploadedRequest', verifyToken, getUserRequests)
-app.post('/donatersDetail', verifyToken, donatersDetail)
+app.get('/donatersDetail', verifyToken, donatersDetail)
 app.post('/addDonorToTheRequest', verifyToken, addDonorsToTheRequest)
-app.post('/getDonorsResponses', verifyToken, getDonorsResponses)
+app.get('/getDonorsResponses', verifyToken, getDonorsResponses)
+
+app.post('/adminLogin', loginAdmin)
+app.delete('/reject-user',adminVerifyToken,deleteUser)
+app.put('/approve-user',adminVerifyToken,approveStatus)
+app.get('/pending-users',adminVerifyToken,pendingUsers)
 
 
 cron.schedule('0 0 */4 * *', () => {

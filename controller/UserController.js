@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const User = require('../model/UserSchema')
@@ -32,7 +32,8 @@ const getCompatibleBloodGroups = (bloodGroup) => {
 const getBloodRequests = async (req, res) => {
     try {
         console.log("user is in savelocation")
-        const { location } = req.body;
+        // const { location } = req.body;
+        const { location } = req.query;
         const bloodGroup = req.bloodGroup;
         console.log("Your Registered Blood Group", bloodGroup)
         const lng = Number(location.longitude);
@@ -167,6 +168,10 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
+
+
+
+
 const addUser = async (req, res) => {
     try {
         const { phoneNumber, password, bloodGroup } = req.body;
@@ -204,6 +209,10 @@ const loginUser = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
+        if(user.status == 'pending'){
+            return res.status(404).json({ error: 'Request Approval Still Pending' });
+        }
+
 
         if (password == user.password) {
             const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: '60d' });
@@ -220,7 +229,6 @@ const loginUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 
 
