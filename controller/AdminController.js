@@ -116,4 +116,15 @@ const deleteUser = async (req, res) => {
     }
 }
 
+
+const getAllUsers = async(req,res)=>{
+    try {
+        const pendingUsers = await User.find({ status: 'pending' });
+        const registeredUsers = await User.find({ status: 'approved' });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: 'Server error getting all user', error: error.message });
+        }
+}
+
 module.exports = { adminVerifyToken, loginAdmin, deleteUser, approveStatus, pendingUsers };

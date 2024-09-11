@@ -26,6 +26,7 @@ app.post('/addDonorToTheRequest', verifyToken, addDonorsToTheRequest)
 app.get('/getDonorsResponses', verifyToken, getDonorsResponses)
 
 app.post('/adminLogin', loginAdmin)
+app.get('/getUsers',adminVerifyToken,getAllUsers)
 app.delete('/reject-user',adminVerifyToken,deleteUser)
 app.put('/approve-user',adminVerifyToken,approveStatus)
 app.get('/pending-users',adminVerifyToken,pendingUsers)
