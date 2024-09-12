@@ -31,14 +31,12 @@ const getCompatibleBloodGroups = (bloodGroup) => {
 
 const getBloodRequests = async (req, res) => {
     try {
-        console.log("user is in savelocation")
         // const { location } = req.body;
         const { location } = req.query;
         const bloodGroup = req.bloodGroup;
-        console.log("Your Registered Blood Group", bloodGroup)
         const lng = Number(location.longitude);
         const lat = Number(location.latitude);
-        console.log(lng,lat)
+        console.log(lng, lat)
 
         const radiusInKilometers = 20;
         const earthRadiusInKilometers = 6378.1;
@@ -75,31 +73,33 @@ const sendBloodRequests = async (req, res) => {
         const { location, bloodGroup, name } = req.body;
         const { phoneNumber, Id } = req;
         if (!bloodGroup || !name) {
-            res.status(500).json("Blood group , phone Number and name is required for making a request");
-        }else{
-        const newUser = await Donater.create({
-            requestorId: Id,
-            location,
-            bloodGroup,
-            phoneNumber,
-            name,
-        });
-        console.log(newUser)
-        const saveReq = await Prev.create({
-            name,
-            location,
-            bloodGroup,
-            phoneNumber
-        })
+            res.status(500).json("Blood group, and name is required for making a request");
+        } else {
+            const newUser = await Donater.create({
+                requestorId: Id,
+                location,
+                bloodGroup,
+                phoneNumber,
+                name,
+            });
+            console.log(newUser)
+            const saveReq = await Prev.create({
+                requestorId: Id,
+                location,
+                bloodGroup,
+                phoneNumber,
+                name,
+            })
 
-        res.status(200).json(newUser);
-    }
+            res.status(200).json(newUser);
+        }
     } catch (error) {
         console.error('Failed to add user:', error);
         res.status(500).json({ error: error.message });
         console.log(error)
     }
 }
+
 
 const getUserRequests = async (req, res) => {
     try {
@@ -115,6 +115,7 @@ const getUserRequests = async (req, res) => {
             return res.status(404).json({ message: 'No requests found for this user' });
         }
 
+        requests.reverse();
         res.status(200).json({ requests });
 
     } catch (error) {
@@ -126,7 +127,7 @@ const getUserRequests = async (req, res) => {
 
 const donatersDetail = async (req, res) => {
     try {
-        const { donaterId } = req.body;
+        const { donaterId } = req.query;
         const response = await Donater.findById(donaterId);
         if (!response) {
             return res.status(404).json({ message: 'Donater not found' });
@@ -202,14 +203,15 @@ const addUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { phoneNumber, password } = req.body;
+        const { phoneNumber, password, location } = req.body;
+        console.log("location in login user =>", location)
         const user = await User.findOne({ phoneNumber });
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        if(user.status == 'pending'){
+        if (user.status == 'pending') {
             return res.status(404).json({ error: 'Request Approval Still Pending' });
         }
 
@@ -217,8 +219,9 @@ const loginUser = async (req, res) => {
         if (password == user.password) {
             const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: '60d' });
             user.token = token;
+            user.location = location;
             await user.save();
-            console.log("User logged in:", user, token);
+            console.log("User logged in:", user);
             return res.status(200).json({ message: 'Login successful', token });
 
         } else {

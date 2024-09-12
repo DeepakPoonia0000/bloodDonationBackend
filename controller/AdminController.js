@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 
 const Admin = require('../model/AdminSchema');
 const User = require('../model/UserSchema');
+const Donater = require('../model/RequestorSchema');
+const Prev = require('../model/PreviousSchema');
 
 
 
@@ -17,7 +19,7 @@ const adminVerifyToken = async (req, res, next) => {
 
     if (!token) {
         return res.status(403).json({ message: 'No token provided' });
-        
+
     }
 
     try {
@@ -89,7 +91,8 @@ const pendingUsers = async (req, res) => {
     try {
         // console.log("user is in pendingUsers")
         const pendingUsers = await User.find({ status: 'pending' });
-        res.status(200).json(pendingUsers);
+        const registeredUsers = await User.find({ status: 'approved' });
+        res.status(200).json({ pendingUsers, registeredUsers });
     } catch (error) {
         console.error('Error fetching pending users:', error);
         res.status(500).json({ message: 'Server error fetching pending users', error: error.message });
@@ -116,15 +119,37 @@ const deleteUser = async (req, res) => {
     }
 }
 
-
-const getAllUsers = async(req,res)=>{
+const userDetails = async (req, res) => {
     try {
-        const pendingUsers = await User.find({ status: 'pending' });
-        const registeredUsers = await User.find({ status: 'approved' });
+
+        const { requestId } = req.query;
+        console.log(requestId);
+        const userDetails = await User.findById(requestId);
+        const donationRequests = await Donater.find({ requestorId: requestId })
+        const previousDonationRequests = await Prev.find({ requestorId: requestId })
+
+        res.status(200).json({ userDetails, donationRequests, previousDonationRequests });
+
     } catch (error) {
         console.log(error)
-        res.status(500).json({ message: 'Server error getting all user', error: error.message });
-        }
+        res.status(500).json({ message: 'Server error in user Details', error: error.message });
+        resErr
+    }
+}
+const getDonorsResponsesAdmin = async (req, res) => {
+    try {
+        const { requestId } = req.query;
+
+        // Find the document by requestId
+        const user = await Donater.findById(requestId);
+
+        // Send the donorsResponse array in the response
+        return res.status(200).json({ donorsResponse: user.donorsResponse });
+
+    } catch (error) {
+        console.error('Error fetching donor responses:', error);
+        res.status(500).json({ error: error.message });
+    }
 }
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser, approveStatus, pendingUsers };
+module.exports = { adminVerifyToken, loginAdmin, deleteUser, approveStatus, pendingUsers, userDetails, getDonorsResponsesAdmin };

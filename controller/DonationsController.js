@@ -37,7 +37,7 @@ const addDonorsToTheRequest = async (req, res) => {
 
 const getDonorsResponses = async (req, res) => {
   try {
-    const { requestId } = req.body;
+    const { requestId } = req.query;
     const Id = req.Id;
 
     // Find the document by requestId

@@ -4,7 +4,8 @@ const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, ge
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
-const { adminVerifyToken, deleteUser, approveStatus, pendingUsers, loginAdmin } = require('./controller/AdminController');
+const { adminVerifyToken, deleteUser, approveStatus, pendingUsers, loginAdmin, userDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
+const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
 
 
 const app = express();
@@ -20,16 +21,22 @@ app.post('/loginUser', loginUser);
 // app.post('/getLocation', verifyToken, getBloodRequests)
 app.get('/getLocation', verifyToken, getBloodRequests)
 app.post('/sendBloodRequest', verifyToken, sendBloodRequests)
-app.post('/getUploadedRequest', verifyToken, getUserRequests)
+app.get('/getUploadedRequest', verifyToken, getUserRequests)
 app.get('/donatersDetail', verifyToken, donatersDetail)
 app.post('/addDonorToTheRequest', verifyToken, addDonorsToTheRequest)
 app.get('/getDonorsResponses', verifyToken, getDonorsResponses)
+app.post('/addCamp',verifyToken,sendCampRequest)
+app.get('/getUserCamps',verifyToken,getUserCamps)
+app.delete('/deleteCamp', verifyToken,deleteCamp);
 
+
+
+app.get('/getDonorsResponsesAdmin', adminVerifyToken, getDonorsResponsesAdmin)
 app.post('/adminLogin', loginAdmin)
-app.get('/getUsers',adminVerifyToken,getAllUsers)
 app.delete('/reject-user',adminVerifyToken,deleteUser)
 app.put('/approve-user',adminVerifyToken,approveStatus)
 app.get('/pending-users',adminVerifyToken,pendingUsers)
+app.get('/userDetails' , adminVerifyToken,userDetails)
 
 
 cron.schedule('0 0 */4 * *', () => {
