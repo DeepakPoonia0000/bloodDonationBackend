@@ -1,7 +1,7 @@
 const Camp = require("../model/CampSchema");
 
 const deleteCamp = async (req, res) => {
-    const { campId } = req.params;
+    const { campId } = req.query;
     const organiserId = req.Id;
     try {
         const camp = await Camp.findById(campId);
@@ -23,7 +23,7 @@ const deleteCamp = async (req, res) => {
 
 
 const sendCampRequest = async (req, res) => {
-    const { campName, campAddress, startDate, endDate } = req.body;
+    const { campName, campAddress, startDate, endDate, location } = req.body;
     const organiserId = req.Id;
 
     if (!campName || !campAddress || !startDate || !endDate) {
@@ -32,6 +32,7 @@ const sendCampRequest = async (req, res) => {
 
     try {
         const newCamp = await Camp.create({
+            location,
             organiserId,
             campName,
             campAddress,
@@ -55,6 +56,18 @@ const getUserCamps = async (req, res) => {
     }
 }
 
+const getCamps = async (req, res) => {
+    try {
+        const camps = await Camp.find()
+        res.status(200).json( camps )
+    } catch (error) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
+
+
+
 module.exports = {
-    deleteCamp, sendCampRequest,getUserCamps
+    deleteCamp, sendCampRequest, getUserCamps, getCamps
 };

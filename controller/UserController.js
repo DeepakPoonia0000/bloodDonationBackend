@@ -36,7 +36,7 @@ const getBloodRequests = async (req, res) => {
         const bloodGroup = req.bloodGroup;
         const lng = Number(location.longitude);
         const lat = Number(location.latitude);
-        console.log(lng, lat)
+        // console.log(lng, lat)
 
         const radiusInKilometers = 20;
         const earthRadiusInKilometers = 6378.1;
@@ -57,7 +57,7 @@ const getBloodRequests = async (req, res) => {
         }
 
         const donaters = await Donater.find(query).limit(100);
-        console.log("number of entries sent =>", donaters.length);
+        // console.log("number of entries sent =>", donaters.length);
         donaters.reverse();
         res.status(200).json(donaters);
 

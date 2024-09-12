@@ -5,7 +5,7 @@ const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
 const { adminVerifyToken, deleteUser, approveStatus, pendingUsers, loginAdmin, userDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
-const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
+const { sendCampRequest, deleteCamp, getUserCamps, getCamps } = require('./controller/CampController');
 
 
 const app = express();
@@ -27,6 +27,7 @@ app.post('/addDonorToTheRequest', verifyToken, addDonorsToTheRequest)
 app.get('/getDonorsResponses', verifyToken, getDonorsResponses)
 app.post('/addCamp',verifyToken,sendCampRequest)
 app.get('/getUserCamps',verifyToken,getUserCamps)
+app.get('/getCamps',verifyToken,getCamps)
 app.delete('/deleteCamp', verifyToken,deleteCamp);
 
 

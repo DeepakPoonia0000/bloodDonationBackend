@@ -19,8 +19,8 @@ const campSchema = new mongoose.Schema({
         required: true,
     },
     location: {
-        latitude: { type: String, default: "12345" },
-        longitude: { type: String, default: "12345" }
+        latitude: String,
+        longitude: String
     },
     createdAt: {
         type: Date,
