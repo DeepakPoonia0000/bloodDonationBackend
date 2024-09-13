@@ -19,13 +19,14 @@ const campSchema = new mongoose.Schema({
         required: true,
     },
     location: {
-        latitude: String,
-        longitude: String
+        latitude: Number,
+        longitude: Number
     },
     createdAt: {
         type: Date,
         default: Date.now,
-    }
+    },
+    
 });
 
 const Camp = mongoose.model('Camp', campSchema);

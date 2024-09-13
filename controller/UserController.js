@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../model/UserSchema')
 const Donater = require('../model/RequestorSchema');
 const Prev = require('../model/PreviousSchema');
+const Camp = require('../model/CampSchema');
 
 const jwtSecret = 'Thr0bZyphrnQ8vkJumpl3BaskEel@ticsXzylN!gmaPneuma';
 
@@ -38,7 +39,7 @@ const getBloodRequests = async (req, res) => {
         const lat = Number(location.latitude);
         // console.log(lng, lat)
 
-        const radiusInKilometers = 20;
+        const radiusInKilometers = 600;
         const earthRadiusInKilometers = 6378.1;
         const radiusInRadians = radiusInKilometers / earthRadiusInKilometers;
 
@@ -52,14 +53,23 @@ const getBloodRequests = async (req, res) => {
             }
         };
 
+        const queryTwo = {
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radiusInRadians],
+                },
+            }
+        };
+
         if (bloodGroup) {
             query.bloodGroup = { $in: compatibleBloodGroups };
         }
 
         const donaters = await Donater.find(query).limit(100);
-        // console.log("number of entries sent =>", donaters.length);
+        const camps = await Camp.find();
+        console.log("number of entries sent =>", camps.length);
         donaters.reverse();
-        res.status(200).json(donaters);
+        res.status(200).json({ donaters, camps });
 
     } catch (error) {
         console.error('Failed to add user:', error);

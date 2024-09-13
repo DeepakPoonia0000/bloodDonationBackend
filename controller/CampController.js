@@ -56,18 +56,20 @@ const getUserCamps = async (req, res) => {
     }
 }
 
-const getCamps = async (req, res) => {
-    try {
-        const camps = await Camp.find()
-        res.status(200).json( camps )
-    } catch (error) {
-        res.status(500).json({ message: 'Server error ', error: error.message });
-    }
-}
+// const getCamps = async (req, res) => {
+//     try {
+//         const { location } = req.query;
+//         console.log(location)
+//         const camps = await Camp.find()
+//         res.status(200).json(camps)
+//     } catch (error) {
+//         res.status(500).json({ message: 'Server error ', error: error.message });
+//     }
+// }
 
 
 
 
 module.exports = {
-    deleteCamp, sendCampRequest, getUserCamps, getCamps
+    deleteCamp, sendCampRequest, getUserCamps
 };

@@ -27,7 +27,6 @@ app.post('/addDonorToTheRequest', verifyToken, addDonorsToTheRequest)
 app.get('/getDonorsResponses', verifyToken, getDonorsResponses)
 app.post('/addCamp',verifyToken,sendCampRequest)
 app.get('/getUserCamps',verifyToken,getUserCamps)
-app.get('/getCamps',verifyToken,getCamps)
 app.delete('/deleteCamp', verifyToken,deleteCamp);
 
 
