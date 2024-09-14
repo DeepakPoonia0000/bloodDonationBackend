@@ -12,10 +12,14 @@ const addUser = new mongoose.Schema({
     longitude: Number,
     latitude: Number,
   },
+  lastDonation:{
+    date:{type:Date},
+    donatedTo: { type: String }
+  },
   previousDonations: [
     {
       date: { type: Date },
-      // donationDetails: String,
+      donatedTo: { type: String }
     },
   ],
   canDonateAgain: {

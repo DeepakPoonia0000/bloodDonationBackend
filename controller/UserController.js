@@ -243,6 +243,52 @@ const loginUser = async (req, res) => {
     }
 };
 
+const approveDonation = async (req, res) => {
+    try {
+        const { donorId, donationId } = req.body;
+
+        // Find the donor (user)
+        const user = await User.findById(donorId);
+
+        // Find the donation request
+        const donationRequest = await Donater.findById(donationId);
+
+        if (!donationRequest) {
+            return res.status(404).json({ message: 'Donation request not found' });
+        }
+
+        const name = donationRequest.name;
+        // console.log(donationRequest);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.lastDonation = {
+            donatedTo: name,
+            date: Date.now(),
+        }
+        // Add donation to user's previous donations
+        user.previousDonations.push({
+            donatedTo: name,
+            date: Date.now(),
+        });
+
+        // Save the updated user
+        await user.save();
+
+        // Delete the donation request after it's approved
+        await Donater.findByIdAndDelete(donationId);
+
+        res.status(200).json({ message: 'Donation approved, saved, and removed from the request' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
 
 
-module.exports = { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail };
+
+
+module.exports = { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation };
+

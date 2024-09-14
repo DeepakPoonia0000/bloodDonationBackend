@@ -37,19 +37,28 @@ const addDonorsToTheRequest = async (req, res) => {
 
 const getDonorsResponses = async (req, res) => {
   try {
-    const { requestId } = req.query;
+    const { requestId, phoneNumber } = req.query;
     const Id = req.Id;
 
     // Find the document by requestId
     const user = await Donater.findById(requestId);
 
-    if (!user || user.requestorId != Id) {
-      return res.status(404).json({ error: 'Request not found' });
+    // if (!user || user.requestorId != Id) {
+    //   return res.status(404).json({ error: 'Request not found' });
+    // }
+
+    let donorsResponse = user.donorsResponse;
+
+    if (phoneNumber) {
+      donorsResponse = donorsResponse.find(response => response.phoneNumber == phoneNumber);
+
+      if (!donorsResponse) {
+        return res.status(404).json({ error: 'No donor response found for the provided phone number' });
+      }
     }
 
-    // Send the donorsResponse array in the response
-    return res.status(200).json({ donorsResponse: user.donorsResponse });
-
+    // Send the donorsResponse in the response (either the whole array or a specific donor response)
+    return res.status(200).json({ donorsResponse });
   } catch (error) {
     console.error('Error fetching donor responses:', error);
     res.status(500).json({ error: error.message });
