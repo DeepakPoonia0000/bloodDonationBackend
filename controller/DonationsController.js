@@ -29,7 +29,7 @@ const addDonorsToTheRequest = async (req, res) => {
         });
 
         return res.status(400).json({
-          message: `You can only donate again three months after your previous donation.`,
+          message: `You can only donate again three months after your previous donation. Last Donation Date :  ${previousDonationDate}`,
           previousDonationDate,
         });
       }

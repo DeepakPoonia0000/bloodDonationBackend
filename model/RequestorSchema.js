@@ -2,14 +2,14 @@
 const mongoose = require('mongoose')
 
 const donater = new mongoose.Schema({
-    requestorId:String,
+    requestorId: String,
     bloodGroup: String,
     name: String,
-    phoneNumber:String,
-    donorsResponse:[{
-        donorId:String,
-        phoneNumber:Number,
-        bloodGroup:String,
+    phoneNumber: String,
+    donorsResponse: [{
+        donorId: String,
+        phoneNumber: Number,
+        bloodGroup: String,
     }],
     location: {
         longitude: Number,
@@ -21,7 +21,7 @@ const donater = new mongoose.Schema({
     },
     expireAt: {
         type: Date,
-        default: () => Date.now() +  5 * 60 * 60 * 1000, 
+        default: () => Date.now() + 5 * 60 * 60 * 1000,
         index: { expireAfterSeconds: 0 },
     },
 

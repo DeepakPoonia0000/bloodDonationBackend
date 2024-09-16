@@ -6,6 +6,7 @@ const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
 const { adminVerifyToken, deleteUser, approveStatus, pendingUsers, loginAdmin, userDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps, getCamps } = require('./controller/CampController');
+const { signupHospital, loginHospital } = require('./controller/HospitalController');
 
 
 const app = express();
@@ -104,6 +105,10 @@ app.get('/userDetails',
     adminVerifyToken,
     userDetails
 );
+
+app.post('/hospitalSignup', signupHospital)
+app.post('/loginHospital', loginHospital)
+
 
 
 
