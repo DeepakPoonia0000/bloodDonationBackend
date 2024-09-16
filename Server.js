@@ -6,7 +6,7 @@ const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
 const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps, getCamps } = require('./controller/CampController');
-const { signupHospital, loginHospital } = require('./controller/HospitalController');
+const { signupHospital, loginHospital, HospitalverifyToken, deleteHospitalBloodRequest, sendBloodRequestsHospital, getHospitalRequests, approveHospitalDonation } = require('./controller/HospitalController');
 
 
 const app = express();
@@ -127,6 +127,26 @@ app.post('/hospitalSignup',
 app.post('/loginHospital',
     loginHospital
 )
+
+app.delete('/deleteHospitalBloodRequest',
+    HospitalverifyToken,
+    deleteHospitalBloodRequest
+);
+
+app.post('/sendBloodRequestHospital',
+    HospitalverifyToken,
+    sendBloodRequestsHospital
+);
+
+app.get('/getHospitalRequests',
+    HospitalverifyToken,
+    getHospitalRequests
+);
+
+app.post('/approveHospitalDonation',
+    HospitalverifyToken,
+    approveHospitalDonation
+);
 
 
 

@@ -2,6 +2,7 @@ const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema')
 const HospitalPrev = require('../model/HospitalPreviousRecords')
 const jwt = require('jsonwebtoken');
+const User = require('../model/UserSchema');
 
 // Secret key for JWT (ideally stored in an environment variable)
 const JWT_SECRET = 'qwertyUJIKL:@#456tU&*I(Op#E$R%^YuiDEFRGH';
@@ -183,7 +184,7 @@ const sendBloodRequestsHospital = async (req, res) => {
     }
 }
 
-const getUserRequests = async (req, res) => {
+const getHospitalRequests = async (req, res) => {
     try {
         const { id } = req;
 
@@ -207,7 +208,7 @@ const getUserRequests = async (req, res) => {
     }
 };
 
-const approveDonation = async (req, res) => {
+const approveHospitalDonation = async (req, res) => {
     try {
         const { donorId, donationId } = req.body;
 
@@ -215,7 +216,7 @@ const approveDonation = async (req, res) => {
         const user = await User.findById(donorId);
 
         // Find the donation request
-        const donationRequest = await Donater.findById(donationId);
+        const donationRequest = await HospitalDonation.findById(donationId);
 
         if (!donationRequest) {
             return res.status(404).json({ message: 'Donation request not found' });
@@ -241,18 +242,31 @@ const approveDonation = async (req, res) => {
         // Save the updated user
         await user.save();
 
-        // Delete the donation request after it's approved
-        await Donater.findByIdAndDelete(donationId);
 
-        res.status(200).json({ message: 'Donation approved, saved, and removed from the request' });
+        res.status(200).json({ message: 'Donation approved and saved' });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
+const deleteHospitalBloodRequest = async (req, res) => {
+    try {
+        const { donationId } = req.body;
+        await HospitalDonation.findByIdAndDelete(donationId);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
 module.exports = {
     signupHospital,
     loginHospital,
-    HospitalverifyToken
+    HospitalverifyToken,
+    deleteHospitalBloodRequest,
+    sendBloodRequestsHospital,
+    getHospitalRequests,
+    approveHospitalDonation
 };
+

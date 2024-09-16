@@ -18,7 +18,6 @@ const hospitalSchema = new Schema({
         longitude: { type: Number, required: true }
     },
     hasBloodDonationCenter: { type: Boolean, default: false },
-    facilities: [String], // e.g., ['Waiting area', 'Refreshments']
     website: { type: String, default: '' },
     specialInstructions: { type: String, default: '' },
     password: String,
