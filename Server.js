@@ -52,7 +52,7 @@ app.post('/addDonorToTheRequest',
 );
 
 app.get('/getDonorsResponses',
-    // verifyToken,
+    verifyToken,
     getDonorsResponses
 );
 

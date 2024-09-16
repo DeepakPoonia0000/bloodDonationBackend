@@ -12,8 +12,8 @@ const addUser = new mongoose.Schema({
     longitude: Number,
     latitude: Number,
   },
-  lastDonation:{
-    date:{type:Date},
+  lastDonation: {
+    date: { type: Date },
     donatedTo: { type: String }
   },
   previousDonations: [
@@ -22,10 +22,6 @@ const addUser = new mongoose.Schema({
       donatedTo: { type: String }
     },
   ],
-  canDonateAgain: {
-    type: Boolean,
-    default: true,
-  },
   joinedOn: {
     type: Date,
     default: Date.now,

@@ -26,7 +26,18 @@ const campSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    
+    deleteAt: {
+        type: Date,
+        required: true,
+    }
+});
+
+// Ensure TTL index on `deleteAt` field
+campSchema.index({ deleteAt: 1 }, { expireAfterSeconds: 0 });
+
+campSchema.pre('save', function (next) {
+    this.deleteAt = this.endDate;
+    next();
 });
 
 const Camp = mongoose.model('Camp', campSchema);
