@@ -1,4 +1,6 @@
 const Hospital = require('../model/HospitalSchema');
+const HospitalDonation = require('../model/HospitalDonationSchema')
+const HospitalPrev = require('../model/HospitalPreviousRecords')
 const jwt = require('jsonwebtoken');
 
 // Secret key for JWT (ideally stored in an environment variable)
@@ -36,7 +38,6 @@ const signupHospital = async (req, res) => {
             contact,
             coordinates,
             hasBloodDonationCenter,
-            operatingHours,
             facilities,
             website,
             specialInstructions,
@@ -87,7 +88,6 @@ const signupHospital = async (req, res) => {
             contact,
             coordinates,
             hasBloodDonationCenter,
-            operatingHours,
             facilities,
             website,
             specialInstructions,
@@ -123,6 +123,10 @@ const loginHospital = async (req, res) => {
             return res.status(404).json({ message: 'Hospital not found' });
         }
 
+        if (hospital.status == 'pending') {
+            return res.status(404).json({ error: 'Request Approval Still Pending' });
+        }
+
         // Check if provided password matches the stored password
         if (hospital.password != password) {
             return res.status(401).json({ message: 'Invalid password' });
@@ -144,6 +148,106 @@ const loginHospital = async (req, res) => {
         // Handle errors
         console.error('Error logging in:', error);
         res.status(500).json({ message: 'Server error' });
+    }
+};
+
+const sendBloodRequestsHospital = async (req, res) => {
+    try {
+        const { location, bloodGroup, name } = req.body;
+        const { id } = req;
+        if (!bloodGroup || !name) {
+            res.status(500).json("Blood group, and name is required for making a request");
+        } else {
+            const newUser = await HospitalDonation.create({
+                requestorId: id,
+                location,
+                bloodGroup,
+                phoneNumber,
+                name,
+            });
+            console.log(newUser)
+            const saveReq = await HospitalPrev.create({
+                requestorId: id,
+                location,
+                bloodGroup,
+                phoneNumber,
+                name,
+            })
+
+            res.status(200).json(newUser);
+        }
+    } catch (error) {
+        console.error('Failed to add user:', error);
+        res.status(500).json({ error: error.message });
+        console.log(error)
+    }
+}
+
+const getUserRequests = async (req, res) => {
+    try {
+        const { id } = req;
+
+        const activeRequests = await HospitalDonation.find({
+            requestorId: id
+        });
+
+        // const allRequests = requests;
+
+        if (activeRequests.length === 0) {
+            return res.status(404).json({ message: 'No requests found for this user' });
+        }
+
+        activeRequests.reverse();
+        res.status(200).json({ activeRequests });
+
+    } catch (error) {
+        console.error('Failed to get user requests:', error);
+        res.status(500).json({ error: error.message });
+
+    }
+};
+
+const approveDonation = async (req, res) => {
+    try {
+        const { donorId, donationId } = req.body;
+
+        // Find the donor (user)
+        const user = await User.findById(donorId);
+
+        // Find the donation request
+        const donationRequest = await Donater.findById(donationId);
+
+        if (!donationRequest) {
+            return res.status(404).json({ message: 'Donation request not found' });
+        }
+
+        const name = donationRequest.name;
+        // console.log(donationRequest);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.lastDonation = {
+            donatedTo: name,
+            date: Date.now(),
+        }
+        // Add donation to user's previous donations
+        user.previousDonations.push({
+            donatedTo: name,
+            date: Date.now(),
+        });
+
+        // Save the updated user
+        await user.save();
+
+        // Delete the donation request after it's approved
+        await Donater.findByIdAndDelete(donationId);
+
+        res.status(200).json({ message: 'Donation approved, saved, and removed from the request' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
 
