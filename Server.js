@@ -4,7 +4,7 @@ const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, ge
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
-const { adminVerifyToken, deleteUser, approveStatus, pendingUsers, loginAdmin, userDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
+const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps, getCamps } = require('./controller/CampController');
 const { signupHospital, loginHospital } = require('./controller/HospitalController');
 
@@ -91,9 +91,19 @@ app.delete('/reject-user',
     deleteUser
 );
 
+app.delete('/reject-hospital',
+    adminVerifyToken,
+    deleteHospital
+);
+
 app.put('/approve-user',
     adminVerifyToken,
     approveStatus
+);
+
+app.put('/approve-hospital',
+    adminVerifyToken,
+    approveHospital
 );
 
 app.get('/pending-users',
@@ -106,8 +116,17 @@ app.get('/userDetails',
     userDetails
 );
 
-app.post('/hospitalSignup', signupHospital)
-app.post('/loginHospital', loginHospital)
+app.get('/hospital-details',
+    adminVerifyToken,
+    HospitalDetails
+)
+
+app.post('/hospitalSignup',
+    signupHospital
+)
+app.post('/loginHospital',
+    loginHospital
+)
 
 
 

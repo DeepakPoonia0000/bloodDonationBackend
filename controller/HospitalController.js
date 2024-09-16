@@ -36,7 +36,6 @@ const signupHospital = async (req, res) => {
             contact,
             coordinates,
             hasBloodDonationCenter,
-            bloodTypes,
             operatingHours,
             facilities,
             website,
@@ -45,7 +44,7 @@ const signupHospital = async (req, res) => {
         } = req.body;
 
         // Basic input validation
-        if (!name || !address || !contact || !coordinates || !Array.isArray(bloodTypes) || !password) {
+        if (!name || !address || !contact || !coordinates || !password) {
             return res.status(400).json({ message: 'Missing required fields or invalid data' });
         }
 
@@ -88,7 +87,6 @@ const signupHospital = async (req, res) => {
             contact,
             coordinates,
             hasBloodDonationCenter,
-            bloodTypes,
             operatingHours,
             facilities,
             website,
@@ -108,9 +106,6 @@ const signupHospital = async (req, res) => {
     }
 };
 
-
-
-
 const loginHospital = async (req, res) => {
     try {
         // Extract data from request body
@@ -122,7 +117,7 @@ const loginHospital = async (req, res) => {
         }
 
         // Find hospital by contact number
-        const hospital = await Hospital.findOne({ 'contact.phone': contact.phone });
+        const hospital = await Hospital.findOne({ 'contact': contact });
 
         if (!hospital) {
             return res.status(404).json({ message: 'Hospital not found' });
