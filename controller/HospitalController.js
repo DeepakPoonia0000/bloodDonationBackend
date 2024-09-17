@@ -30,6 +30,7 @@ const HospitalverifyToken = async (req, res, next) => {
         req.user = user;
         req.id = decodedToken.id;
         req.phoneNumber = user.contact.phone;
+        req.location = user.location;
         next();
     } catch (error) {
         console.error('Failed to verify token:', error);
@@ -167,13 +168,14 @@ const loginHospital = async (req, res) => {
 const sendBloodRequestsHospital = async (req, res) => {
     try {
         const { bloodGroup, name } = req.body;
-        const { phoneNumber, id } = req;
+        const { phoneNumber, id, location } = req;
         if (!bloodGroup || !name) {
             res.status(500).json("Blood group, and name is required for making a request");
         } else {
             const newUser = await HospitalDonation.create({
                 requestorId: id,
                 bloodGroup,
+                location,
                 phoneNumber,
                 name,
             });
@@ -181,6 +183,7 @@ const sendBloodRequestsHospital = async (req, res) => {
             const saveReq = await HospitalPrev.create({
                 requestorId: id,
                 bloodGroup,
+                location,
                 phoneNumber,
                 name,
             })
