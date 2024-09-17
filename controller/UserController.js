@@ -41,7 +41,7 @@ const getBloodRequests = async (req, res) => {
         const lat = Number(location.latitude);
         console.log(lng, lat)
 
-        const radiusInKilometers = 20000;
+        const radiusInKilometers = 20;
         const earthRadiusInKilometers = 6378.1;
         const radiusInRadians = radiusInKilometers / earthRadiusInKilometers;
 
