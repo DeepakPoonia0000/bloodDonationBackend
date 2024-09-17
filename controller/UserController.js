@@ -34,8 +34,8 @@ const getCompatibleBloodGroups = (bloodGroup) => {
 
 const getBloodRequests = async (req, res) => {
     try {
-        const { location } = req.body;
-        // const { location } = req.query;
+        // const { location } = req.body;
+        const { location } = req.query;
         const bloodGroup = req.bloodGroup;
         const lng = Number(location.longitude);
         const lat = Number(location.latitude);
@@ -55,12 +55,20 @@ const getBloodRequests = async (req, res) => {
             }
         };
 
+        const query2 = {
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radiusInRadians],
+                },
+            }
+        };
+
         if (bloodGroup) {
             query.bloodGroup = { $in: compatibleBloodGroups };
         }
 
         const donaters = await Donater.find(query).limit(100);
-        const hospitalRequests = await HospitalDonation.find(query).limit(10)
+        const hospitalRequests = await HospitalDonation.find(query2).limit(10)
         const camps = await Camp.find();
         console.log("number of entries sent =>", camps.length);
         donaters.reverse();
