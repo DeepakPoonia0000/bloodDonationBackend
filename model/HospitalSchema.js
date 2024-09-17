@@ -22,6 +22,7 @@ const hospitalSchema = new Schema({
     specialInstructions: { type: String, default: '' },
     password: String,
     status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
+    token: String,
 });
 
 const Hospital = mongoose.model('Hospital', hospitalSchema);

@@ -7,7 +7,7 @@ const User = require('../model/UserSchema');
 // Secret key for JWT (ideally stored in an environment variable)
 const JWT_SECRET = 'qwertyUJIKL:@#456tU&*I(Op#E$R%^YuiDEFRGH';
 
-const HospitalverifyToken = (req, res, next) => {
+const HospitalverifyToken = async (req, res, next) => {
     // Get token from the request header
     const token = req.headers.authorization;
 
@@ -16,16 +16,25 @@ const HospitalverifyToken = (req, res, next) => {
         return res.status(401).json({ message: 'No token provided' });
     }
 
-    // Verify token
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({ message: 'Invalid token' });
+    try {
+        const decodedToken = jwt.verify(token, JWT_SECRET);
+        const user = await Hospital.findById(decodedToken.id);
+
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid Hospital' });
         }
-        // Attach decoded user information to the request object
-        req.id = decoded.id;
-        req.hospitalName = decoded.name;
+
+        if (user.token !== token) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+        req.user = user;
+        req.id = decodedToken.id;
+        req.phoneNumber = user.contact.phone;
         next();
-    });
+    } catch (error) {
+        console.error('Failed to verify token:', error);
+        return res.status(500).json({ message: 'Failed to verify token', error: error.message });
+    }
 }
 
 // Function to handle hospital signup
@@ -145,6 +154,9 @@ const loginHospital = async (req, res) => {
             message: 'Login successful',
             token
         });
+
+        hospital.token = token;
+        await hospital.save();
     } catch (error) {
         // Handle errors
         console.error('Error logging in:', error);
@@ -155,7 +167,7 @@ const loginHospital = async (req, res) => {
 const sendBloodRequestsHospital = async (req, res) => {
     try {
         const { bloodGroup, name } = req.body;
-        const { id } = req;
+        const { phoneNumber, id } = req;
         if (!bloodGroup || !name) {
             res.status(500).json("Blood group, and name is required for making a request");
         } else {
