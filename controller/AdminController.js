@@ -8,12 +8,7 @@ const Prev = require('../model/PreviousSchema');
 const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema');
 
-
-
 const adminJwtSecret = 'asdfGHJKL123$%^&*QWER!@#4%^&*!%^#QTYE^@$YEW@^WYEHre5';
-
-
-
 
 const adminVerifyToken = async (req, res, next) => {
     // console.log("user is in admin token verification")
@@ -225,4 +220,4 @@ const getHospitalDonorsResponsesAdmin = async (req, res) => {
     }
 }
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser,deleteHospital, approveStatus,approveHospital, pendingUsers, userDetails,HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin };
+module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin };
