@@ -6,6 +6,7 @@ const User = require('../model/UserSchema');
 const Donater = require('../model/RequestorSchema');
 const Prev = require('../model/PreviousSchema');
 const Hospital = require('../model/HospitalSchema');
+const HospitalDonation = require('../model/HospitalDonationSchema');
 
 
 
@@ -208,4 +209,20 @@ const getDonorsResponsesAdmin = async (req, res) => {
     }
 }
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser,deleteHospital, approveStatus,approveHospital, pendingUsers, userDetails,HospitalDetails, getDonorsResponsesAdmin };
+const getHospitalDonorsResponsesAdmin = async (req, res) => {
+    try {
+        const { requestId } = req.query;
+
+        // Find the document by requestId
+        const user = await HospitalDonation.findById(requestId);
+
+        // Send the donorsResponse array in the response
+        return res.status(200).json({ donorsResponse: user.donorsResponse });
+
+    } catch (error) {
+        console.error('Error fetching donor responses:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+module.exports = { adminVerifyToken, loginAdmin, deleteUser,deleteHospital, approveStatus,approveHospital, pendingUsers, userDetails,HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin };

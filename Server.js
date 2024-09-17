@@ -4,9 +4,19 @@ const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, ge
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
-const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin } = require('./controller/AdminController');
-const { sendCampRequest, deleteCamp, getUserCamps, getCamps } = require('./controller/CampController');
-const { signupHospital, loginHospital, HospitalverifyToken, deleteHospitalBloodRequest, sendBloodRequestsHospital, getHospitalRequests, approveHospitalDonation } = require('./controller/HospitalController');
+const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin } = require('./controller/AdminController');
+const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
+const {
+    signupHospital,
+    loginHospital,
+    HospitalverifyToken,
+    deleteHospitalBloodRequest,
+    sendBloodRequestsHospital,
+    getHospitalRequests,
+    approveHospitalDonation,
+    getHospitalDonorsResponses,
+    addDonorsToTheHospitalRequest
+} = require('./controller/HospitalController');
 
 
 const app = express();
@@ -91,19 +101,9 @@ app.delete('/reject-user',
     deleteUser
 );
 
-app.delete('/reject-hospital',
-    adminVerifyToken,
-    deleteHospital
-);
-
 app.put('/approve-user',
     adminVerifyToken,
     approveStatus
-);
-
-app.put('/approve-hospital',
-    adminVerifyToken,
-    approveHospital
 );
 
 app.get('/pending-users',
@@ -114,6 +114,21 @@ app.get('/pending-users',
 app.get('/userDetails',
     adminVerifyToken,
     userDetails
+);
+
+app.get('/getHospitalDonorsResponsesAdmin',
+    adminVerifyToken,
+    getHospitalDonorsResponsesAdmin
+);
+
+app.delete('/reject-hospital',
+    adminVerifyToken,
+    deleteHospital
+);
+
+app.put('/approve-hospital',
+    adminVerifyToken,
+    approveHospital
 );
 
 app.get('/hospital-details',
@@ -141,6 +156,16 @@ app.post('/sendBloodRequestHospital',
 app.get('/getHospitalRequests',
     HospitalverifyToken,
     getHospitalRequests
+);
+
+app.get('/getHospitalDonorsResponses',
+    HospitalverifyToken,
+    getHospitalDonorsResponses
+);
+
+app.post('/addDonorToTheHospitalRequest',
+    HospitalverifyToken,
+    addDonorsToTheHospitalRequest
 );
 
 app.post('/approveHospitalDonation',
