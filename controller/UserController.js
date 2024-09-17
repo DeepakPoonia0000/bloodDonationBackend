@@ -5,6 +5,7 @@ const User = require('../model/UserSchema')
 const Donater = require('../model/RequestorSchema');
 const Prev = require('../model/PreviousSchema');
 const Camp = require('../model/CampSchema');
+const Hospital = require('../model/HospitalSchema');
 
 const jwtSecret = 'Thr0bZyphrnQ8vkJumpl3BaskEel@ticsXzylN!gmaPneuma';
 
@@ -37,9 +38,9 @@ const getBloodRequests = async (req, res) => {
         const bloodGroup = req.bloodGroup;
         const lng = Number(location.longitude);
         const lat = Number(location.latitude);
-        // console.log(lng, lat)
+        console.log(lng, lat)
 
-        const radiusInKilometers = 600;
+        const radiusInKilometers = 20000;
         const earthRadiusInKilometers = 6378.1;
         const radiusInRadians = radiusInKilometers / earthRadiusInKilometers;
 
@@ -53,23 +54,16 @@ const getBloodRequests = async (req, res) => {
             }
         };
 
-        const queryTwo = {
-            location: {
-                $geoWithin: {
-                    $centerSphere: [[lng, lat], radiusInRadians],
-                },
-            }
-        };
-
         if (bloodGroup) {
             query.bloodGroup = { $in: compatibleBloodGroups };
         }
 
         const donaters = await Donater.find(query).limit(100);
+        const hospitalRequests = await Hospital.find(query).limit(10)
         const camps = await Camp.find();
         console.log("number of entries sent =>", camps.length);
         donaters.reverse();
-        res.status(200).json({ donaters, camps });
+        res.status(200).json({ donaters, camps, hospitalRequests });
 
     } catch (error) {
         console.error('Failed to add user:', error);

@@ -46,7 +46,7 @@ const signupHospital = async (req, res) => {
             name,
             address,
             contact,
-            coordinates,
+            location,
             hasBloodDonationCenter,
             facilities,
             website,
@@ -55,7 +55,7 @@ const signupHospital = async (req, res) => {
         } = req.body;
 
         // Basic input validation
-        if (!name || !address || !contact || !coordinates || !password) {
+        if (!name || !address || !contact || !location || !password) {
             return res.status(400).json({ message: 'Missing required fields or invalid data' });
         }
 
@@ -96,7 +96,7 @@ const signupHospital = async (req, res) => {
             name,
             address,
             contact,
-            coordinates,
+            location,
             hasBloodDonationCenter,
             facilities,
             website,

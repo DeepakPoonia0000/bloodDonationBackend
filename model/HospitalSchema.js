@@ -13,7 +13,7 @@ const hospitalSchema = new Schema({
         phone: { type: String, required: true },
         email: { type: String, required: true }
     },
-    coordinates: {
+    location: {
         latitude: { type: Number, required: true },
         longitude: { type: Number, required: true }
     },
