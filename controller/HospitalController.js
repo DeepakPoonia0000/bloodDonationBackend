@@ -154,14 +154,13 @@ const loginHospital = async (req, res) => {
 
 const sendBloodRequestsHospital = async (req, res) => {
     try {
-        const { location, bloodGroup, name } = req.body;
+        const { bloodGroup, name } = req.body;
         const { id } = req;
         if (!bloodGroup || !name) {
             res.status(500).json("Blood group, and name is required for making a request");
         } else {
             const newUser = await HospitalDonation.create({
                 requestorId: id,
-                location,
                 bloodGroup,
                 phoneNumber,
                 name,
@@ -169,7 +168,6 @@ const sendBloodRequestsHospital = async (req, res) => {
             console.log(newUser)
             const saveReq = await HospitalPrev.create({
                 requestorId: id,
-                location,
                 bloodGroup,
                 phoneNumber,
                 name,
