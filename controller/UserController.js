@@ -6,6 +6,7 @@ const Donater = require('../model/RequestorSchema');
 const Prev = require('../model/PreviousSchema');
 const Camp = require('../model/CampSchema');
 const Hospital = require('../model/HospitalSchema');
+const HospitalDonation = require('../model/HospitalDonationSchema');
 
 const jwtSecret = 'Thr0bZyphrnQ8vkJumpl3BaskEel@ticsXzylN!gmaPneuma';
 
@@ -59,7 +60,7 @@ const getBloodRequests = async (req, res) => {
         }
 
         const donaters = await Donater.find(query).limit(100);
-        const hospitalRequests = await Hospital.find(query).limit(10)
+        const hospitalRequests = await HospitalDonation.find(query).limit(10)
         const camps = await Camp.find();
         console.log("number of entries sent =>", camps.length);
         donaters.reverse();
