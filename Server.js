@@ -15,7 +15,8 @@ const {
     getHospitalRequests,
     approveHospitalDonation,
     getHospitalDonorsResponses,
-    addDonorsToTheHospitalRequest
+    addDonorsToTheHospitalRequest,
+    hospitlDonationDetail
 } = require('./controller/HospitalController');
 
 
@@ -171,6 +172,11 @@ app.post('/addDonorToTheHospitalRequest',
 app.post('/approveHospitalDonation',
     HospitalverifyToken,
     approveHospitalDonation
+);
+
+app.get('/hospitlDonationDetail',
+    verifyToken,
+    hospitlDonationDetail
 );
 
 

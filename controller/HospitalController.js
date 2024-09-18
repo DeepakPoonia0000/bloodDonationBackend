@@ -366,6 +366,19 @@ const addDonorsToTheHospitalRequest = async (req, res) => {
     }
 };
 
+const hospitlDonationDetail = async (req, res) => {
+    try {
+        const { donaterId } = req.query;
+        const response = await HospitalDonation.findById(donaterId);
+        if (!response) {
+            return res.status(404).json({ message: 'Donater not found' });
+        }
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json(error);
+    }
+};
+
 module.exports = {
     signupHospital,
     loginHospital,
@@ -375,6 +388,7 @@ module.exports = {
     getHospitalRequests,
     approveHospitalDonation,
     getHospitalDonorsResponses,
-    addDonorsToTheHospitalRequest
+    addDonorsToTheHospitalRequest,
+    hospitlDonationDetail
 };
 
