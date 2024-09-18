@@ -7,6 +7,7 @@ const Donater = require('../model/RequestorSchema');
 const Prev = require('../model/PreviousSchema');
 const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema');
+const HospitalPrev = require('../model/HospitalPreviousRecords');
 
 const adminJwtSecret = 'asdfGHJKL123$%^&*QWER!@#4%^&*!%^#QTYE^@$YEW@^WYEHre5';
 
@@ -176,8 +177,8 @@ const HospitalDetails = async (req, res) => {
         const { requestId } = req.query;
         console.log(requestId);
         const hospitalDetails = await Hospital.findById(requestId);
-        const donationRequests = await Donater.find({ requestorId: requestId })
-        const previousDonationRequests = await Prev.find({ requestorId: requestId })
+        const donationRequests = await HospitalDonation.find({ requestorId: requestId })
+        const previousDonationRequests = await HospitalPrev.find({ requestorId: requestId })
 
         res.status(200).json({ hospitalDetails, donationRequests, previousDonationRequests });
 
