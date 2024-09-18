@@ -69,8 +69,8 @@ const getBloodRequests = async (req, res) => {
 
         const donaters = await Donater.find(query).limit(100);
         const hospitalRequests = await HospitalDonation.find(query2).limit(10)
-        const camps = await Camp.find();
-        console.log("number of entries sent =>", camps.length);
+        const camps = await Camp.find(query2);
+        console.log("number of entries sent =>\n", camps.length);
         donaters.reverse();
         res.status(200).json({ donaters, camps, hospitalRequests });
 

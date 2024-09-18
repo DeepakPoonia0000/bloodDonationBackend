@@ -164,7 +164,7 @@ app.get('/getHospitalDonorsResponses',
 );
 
 app.post('/addDonorToTheHospitalRequest',
-    HospitalverifyToken,
+    verifyToken,
     addDonorsToTheHospitalRequest
 );
 
