@@ -384,8 +384,8 @@ const hospitlDonationDetail = async (req, res) => {
 const hospitalProfileDetails = async (req, res) => {
     try {
         const { id } = req;
-        const user = await Hospital.findById(id);
-        const previousRequests = await HospitalPrev.find({ requestorId: id },{ token: 0 } );
+        const user = await Hospital.findById(id, { token: 0 });
+        const previousRequests = await HospitalPrev.find({ requestorId: id });
         res.status(200).json({ user, previousRequests });
 
     } catch (error) {
