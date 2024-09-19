@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation , userProfileDetails } = require('./controller/UserController')
+const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation , userProfileDetails, deleteBloodRequest } = require('./controller/UserController')
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
@@ -56,6 +56,10 @@ app.post('/sendBloodRequest',
     sendBloodRequests
 );
 
+app.delete('/deleteBloodRequestUser',
+    verifyToken,
+    deleteBloodRequest
+)
 app.get('/getUploadedRequest',
     verifyToken,
     getUserRequests
@@ -151,6 +155,7 @@ app.post('/setNewEvent',
 )
 
 app.get('/getEvents',
+
     getEvents
 )
 

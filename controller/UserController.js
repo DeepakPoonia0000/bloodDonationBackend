@@ -113,6 +113,18 @@ const sendBloodRequests = async (req, res) => {
     }
 }
 
+const deleteBloodRequest = async (req, res) => {
+    try {
+        const { id } = req.query;
+
+        await Donater.findByIdAndDelete(id);
+        res.status(200).json({ message: "Blood Request deleted Successfully" });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error in delete Blood Request', error: error.message });
+    }
+}
+
 
 const getUserRequests = async (req, res) => {
     try {
@@ -293,7 +305,7 @@ const approveDonation = async (req, res) => {
 const userProfileDetails = async (req, res) => {
     try {
         const { Id } = req;
-        const user = await User.findById(Id ,{ token: 0});
+        const user = await User.findById(Id, { token: 0 });
         const previousRequests = await Prev.find({ requestorId: Id });
         res.status(200).json({ user, previousRequests });
 
@@ -305,5 +317,5 @@ const userProfileDetails = async (req, res) => {
 
 
 
-module.exports = { addUser, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation };
+module.exports = { addUser, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests,deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
 
