@@ -4,7 +4,7 @@ const { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, ge
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses } = require('./controller/DonationsController');
-const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent } = require('./controller/AdminController');
+const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
 const {
     signupHospital,
@@ -148,6 +148,16 @@ app.get('/hospital-details',
 app.post('/setNewEvent',
     adminVerifyToken,
     setNewEvent
+)
+
+app.get('/getEvents',
+    adminVerifyToken,
+    getEvents
+)
+
+app.delete('/deleteEvent',
+    adminVerifyToken,
+    deleteEvent
 )
 
 app.post('/hospitalSignup',

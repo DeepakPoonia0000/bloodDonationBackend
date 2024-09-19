@@ -258,4 +258,4 @@ const deleteEvent = async (req, res) => {
 }
 
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent };
+module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent,getEvents,deleteEvent };

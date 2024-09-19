@@ -24,7 +24,7 @@ const event = new mongoose.Schema({
 });
 
 // TTL index on deleteAt field to delete document automatically
-eventSchema.index({ deleteAt: 1 }, { expireAfterSeconds: 0 });
+event.index({ deleteAt: 1 }, { expireAfterSeconds: 0 });
 
 const Event = mongoose.model('Event', event);
 
