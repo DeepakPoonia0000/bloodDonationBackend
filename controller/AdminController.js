@@ -232,9 +232,30 @@ const setNewEvent = async (req, res) => {
             eventDate,
             eventDescription
         });
+        return res.status(201).json({ message: 'Event created successfully', event });
     } catch (error) {
         res.status(500).json({ message: 'Server error ', error: error.message });
     }
 }
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin , setNewEvent };
+const getEvents = async (req, res) => {
+    try {
+        const events = await Event.find();
+        return res.status(200).json({ events });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error in event', error: error.message });
+    }
+}
+
+const deleteEvent = async (req, res) => {
+    try {
+        const { id } = req.query;
+        await Event.findByIdAndDelete(id);
+        res.status(200).json({ message: "Event Deleted Successfully" })
+    } catch (error) {
+        res.status(500).json({ message: 'Server error deleting the event', error: error.message });
+    }
+}
+
+
+module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent };
