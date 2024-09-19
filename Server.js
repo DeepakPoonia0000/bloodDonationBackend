@@ -151,7 +151,6 @@ app.post('/setNewEvent',
 )
 
 app.get('/getEvents',
-    adminVerifyToken,
     getEvents
 )
 
