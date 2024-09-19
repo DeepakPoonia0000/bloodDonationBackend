@@ -38,6 +38,8 @@ const HospitalverifyToken = async (req, res, next) => {
     }
 }
 
+
+
 // Function to handle hospital signup
 
 const signupHospital = async (req, res) => {
@@ -379,9 +381,22 @@ const hospitlDonationDetail = async (req, res) => {
     }
 };
 
+const hospitalProfileDetails = async (req, res) => {
+    try {
+        const { id, user } = req;
+        const previousRequests = HospitalPrev.find({ requestorId: id });
+        res.status(200).json({ user, previousRequests });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+
+    }
+}
+
 module.exports = {
     signupHospital,
     loginHospital,
+    hospitalProfileDetails,
     HospitalverifyToken,
     deleteHospitalBloodRequest,
     sendBloodRequestsHospital,

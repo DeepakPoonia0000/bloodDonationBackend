@@ -292,15 +292,18 @@ const approveDonation = async (req, res) => {
 
 const userProfileDetails = async (req, res) => {
     try {
-        const { Id } = req;
-        
+        const { Id, user } = req;
+        const previousRequests = Prev.find({ requestorId: Id });
+        res.status(200).json({ user, previousRequests });
+
     } catch (error) {
         res.status(500).json({ message: 'Server error ', error: error.message });
+
     }
 }
 
 
 
 
-module.exports = { addUser, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation };
+module.exports = { addUser, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation };
 
