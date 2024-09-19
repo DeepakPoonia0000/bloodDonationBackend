@@ -172,6 +172,32 @@ const userDetails = async (req, res) => {
     }
 }
 
+const deleteBloodRequestAdmin = async (req, res) => {
+    try {
+        const { id } = req.query;  // Get the blood request ID from query
+        const { Id } = req;
+
+        const admin = Admin.findById(Id);
+
+        // Find the blood request by its ID
+        const donation = await Donater.findById(id);
+
+        // Check if the user exists and if the requestor ID matches the logged-in user ID
+        if (admin) {
+            // Delete the blood request
+            await Donater.findByIdAndDelete(id);
+            return res.status(200).json({ message: "Blood Request deleted successfully." });
+        }
+
+        // If user not authorized, send a 403 Forbidden response
+        return res.status(403).json({ message: "You are not authorized to perform this action." });
+
+    } catch (error) {
+        // Catch and return any server errors
+        return res.status(500).json({ message: 'Server error in delete Blood Request.', error: error.message });
+    }
+};
+
 const HospitalDetails = async (req, res) => {
     try {
 
@@ -258,4 +284,4 @@ const deleteEvent = async (req, res) => {
 }
 
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent };
+module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteBloodRequestAdmin, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent };
