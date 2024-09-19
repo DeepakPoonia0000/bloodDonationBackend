@@ -293,8 +293,8 @@ const approveDonation = async (req, res) => {
 const userProfileDetails = async (req, res) => {
     try {
         const { Id } = req;
-        const user = await User.findById(Id);
-        const previousRequests = await Prev.find({ requestorId: Id },{ token: 0} );
+        const user = await User.findById(Id ,{ token: 0});
+        const previousRequests = await Prev.find({ requestorId: Id });
         res.status(200).json({ user, previousRequests });
 
     } catch (error) {
@@ -302,7 +302,6 @@ const userProfileDetails = async (req, res) => {
 
     }
 }
-
 
 
 
