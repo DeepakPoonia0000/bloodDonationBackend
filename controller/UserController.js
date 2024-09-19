@@ -292,8 +292,9 @@ const approveDonation = async (req, res) => {
 
 const userProfileDetails = async (req, res) => {
     try {
-        const { Id, user } = req;
-        const previousRequests = Prev.find({ requestorId: Id });
+        const { Id } = req;
+        const user = await User.findById(Id);
+        const previousRequests = await Prev.find({ requestorId: Id });
         res.status(200).json({ user, previousRequests });
 
     } catch (error) {
