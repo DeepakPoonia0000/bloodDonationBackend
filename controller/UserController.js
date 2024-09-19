@@ -290,6 +290,15 @@ const approveDonation = async (req, res) => {
     }
 };
 
+const userProfileDetails = async (req, res) => {
+    try {
+        const { Id } = req;
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
 
 
 

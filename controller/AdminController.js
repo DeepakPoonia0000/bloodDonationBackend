@@ -127,7 +127,7 @@ const deleteUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.json({ message: 'User rejected' });
+        res.json({ message: 'User Have Been Removed' });
 
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -145,7 +145,7 @@ const deleteHospital = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        res.json({ message: 'User rejected' });
+        res.json({ message: 'User Have Been Removed' });
 
     } catch (error) {
         console.error('Error deleting user:', error);
@@ -208,6 +208,7 @@ const getDonorsResponsesAdmin = async (req, res) => {
 const getHospitalDonorsResponsesAdmin = async (req, res) => {
     try {
         const { requestId } = req.query;
+        console.log(requestId);
 
         // Find the document by requestId
         const user = await HospitalDonation.findById(requestId);
