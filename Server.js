@@ -130,11 +130,6 @@ app.get('/userDetails',
     userDetails
 );
 
-app.delete('/deleteBloodRequestAdmin',
-    adminVerifyToken,
-    deleteBloodRequest
-)
-
 app.get('/getHospitalDonorsResponsesAdmin',
     adminVerifyToken,
     getHospitalDonorsResponsesAdmin
