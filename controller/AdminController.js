@@ -8,6 +8,7 @@ const Prev = require('../model/PreviousSchema');
 const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema');
 const HospitalPrev = require('../model/HospitalPreviousRecords');
+const Event = require('../model/EventSchema')
 
 const adminJwtSecret = 'asdfGHJKL123$%^&*QWER!@#4%^&*!%^#QTYE^@$YEW@^WYEHre5';
 
@@ -222,4 +223,18 @@ const getHospitalDonorsResponsesAdmin = async (req, res) => {
     }
 }
 
-module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin };
+const setNewEvent = async (req, res) => {
+    try {
+        const { eventName, eventLocation, eventDate, eventDescription } = req.body;
+        const event = await Event.create({
+            eventName,
+            eventLocation,
+            eventDate,
+            eventDescription
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+    }
+}
+
+module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin , setNewEvent };
