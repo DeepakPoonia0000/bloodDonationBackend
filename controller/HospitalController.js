@@ -385,7 +385,7 @@ const hospitalProfileDetails = async (req, res) => {
     try {
         const { id } = req;
         const user = await Hospital.findById(id);
-        const previousRequests = await HospitalPrev.find({ requestorId: id });
+        const previousRequests = await HospitalPrev.find({ requestorId: id },{ token: 0 } );
         res.status(200).json({ user, previousRequests });
 
     } catch (error) {
