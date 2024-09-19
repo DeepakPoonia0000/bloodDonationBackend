@@ -60,6 +60,7 @@ app.delete('/deleteBloodRequestUser',
     verifyToken,
     deleteBloodRequest
 )
+
 app.get('/getUploadedRequest',
     verifyToken,
     getUserRequests
@@ -128,6 +129,11 @@ app.get('/userDetails',
     adminVerifyToken,
     userDetails
 );
+
+app.delete('/deleteBloodRequestAdmin',
+    adminVerifyToken,
+    deleteBloodRequest
+)
 
 app.get('/getHospitalDonorsResponsesAdmin',
     adminVerifyToken,
