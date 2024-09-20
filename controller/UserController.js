@@ -443,4 +443,4 @@ const userProfileDetails = async (req, res) => {
     }
 }
 
-module.exports = { addUser, verifyOtp,forgetPasswordOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
+module.exports = { addUser, verifyOtp, forgetPasswordOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
