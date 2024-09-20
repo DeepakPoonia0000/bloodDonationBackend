@@ -210,14 +210,18 @@ const verifyToken = async (req, res, next) => {
 const addUser = async (req, res) => {
     try {
         const { phoneNumber, password, bloodGroup, email } = req.body;
-        // console.log(phoneNumber, password, bloodGroup);
+
         if (!phoneNumber || !password || !bloodGroup) {
             return res.status(400).json({ error: 'Phone Number, password, and blood group are necessary for customer' });
         }
 
         const existingNumber = await User.findOne({ phoneNumber });
-        if (existingNumber) {
+        if (existingNumber && existingNumber.isVerified) {
             return res.status(400).json({ error: 'Number already exists' });
+        }
+
+        if (existingNumber) {
+            await User.findByIdAndDelete(existingNumber._id);
         }
 
         const newUser = await User.create({
@@ -239,7 +243,7 @@ const addUser = async (req, res) => {
 
         const mailOptions = {
             from: "twoobgmi@gmail.com",
-            to: email, // Use the email from req.body
+            to: email,
             subject: "OTP Verification",
             text: `Dear sir, The 6-digit OTP for your donation app account is ${OTP}`,
         };
@@ -259,8 +263,6 @@ const addUser = async (req, res) => {
             }
         });
 
-        console.log(newUser);
-        res.status(201).json({ message: "User Added successfully." });
     } catch (error) {
         console.error('Failed to add user:', error);
         res.status(500).json({ error: error.message });
@@ -389,4 +391,4 @@ const userProfileDetails = async (req, res) => {
     }
 }
 
-module.exports = { addUser,verifyOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
+module.exports = { addUser, verifyOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
