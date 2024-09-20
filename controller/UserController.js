@@ -316,7 +316,7 @@ const userProfileDetails = async (req, res) => {
         const { Id } = req;
         const user = await User.findById(Id, { token: 0 });
         const previousRequests = await Prev.find({ requestorId: Id });
-        res.status(200).json({ user, previousRequests });
+        res.status(200).json({ user, message:"these are the previous requests =>",previousRequests });
 
     } catch (error) {
         res.status(500).json({ message: 'Server error ', error: error.message });
