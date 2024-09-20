@@ -105,11 +105,12 @@ const approveHospital = async (req, res) => {
 const pendingUsers = async (req, res) => {
     try {
         // console.log("user is in pendingUsers")
-        const pendingUsers = await User.find({ status: 'pending' });
+        const pendingUsers = await User.find({ status: 'pending', isVerified: true });
+        const notVerifiedUsers = await User.find({ status: 'pending', isVerified: false });
         const pendingHospitals = await Hospital.find({ status: 'pending' })
         const registeredUsers = await User.find({ status: 'approved' });
         const registeredHospitals = await Hospital.find({ status: 'approved' });
-        res.status(200).json({ pendingUsers, pendingHospitals, registeredUsers, registeredHospitals });
+        res.status(200).json({ pendingUsers, pendingHospitals, registeredUsers, registeredHospitals, notVerifiedUsers });
     } catch (error) {
         console.error('Error fetching pending users:', error);
         res.status(500).json({ message: 'Server error fetching pending users', error: error.message });
