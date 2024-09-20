@@ -337,7 +337,6 @@ const verifyOtp = async (req, res) => {
 
         if (newPassword) {
             user.password = newPassword;
-            user.save();
         }
 
         // OTP is correct, you can now clear the OTP from the user document and mark the user as verified
