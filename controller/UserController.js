@@ -209,10 +209,10 @@ const verifyToken = async (req, res, next) => {
 
 const addUser = async (req, res) => {
     try {
-        const { phoneNumber, password, bloodGroup } = req.body;
-        console.log(phoneNumber, password, bloodGroup)
+        const { phoneNumber, password, bloodGroup, email } = req.body;
+        console.log(phoneNumber, password, bloodGroup);
         if (!phoneNumber || !password || !bloodGroup) {
-            return res.status(400).json({ error: 'Phone Number and password are necessary for customer' });
+            return res.status(400).json({ error: 'Phone Number, password, and blood group are necessary for customer' });
         }
 
         const existingNumber = await User.findOne({ phoneNumber });
@@ -224,16 +224,81 @@ const addUser = async (req, res) => {
             phoneNumber,
             password,
             bloodGroup,
+            email, // Include email when creating the user
+        });
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "twoobgmi@gmail.com",
+                pass: "ozeuccgzxmyznxdr",
+            },
+        });
+
+        const OTP = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit number
+
+        const mailOptions = {
+            from: "twoobgmi@gmail.com",
+            to: email, // Use the email from req.body
+            subject: "OTP Verification",
+            text: `Dear sir, The 6-digit OTP for your donation app account is ${OTP}`,
+        };
+
+        newUser.otp = OTP; // Assign OTP to newUser
+        await newUser.save(); // Save the newUser with OTP
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                return res.status(500).send({ error: "Error sending email" });
+            } else {
+                console.log("Email sent: " + info.response);
+                return res.status(201).json({
+                    message: "OTP Sent successfully!",
+                });
+            }
         });
 
         console.log(newUser);
-        res.status(201).json({ newUser });
+        res.status(201).json({ message: "User Added successfully." });
     } catch (error) {
         console.error('Failed to add user:', error);
         res.status(500).json({ error: error.message });
-        console.log(error)
     }
 };
+
+const verifyOtp = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        if (!email || !otp) {
+            return res.status(400).json({ error: 'Email and OTP are required.' });
+        }
+
+        // Find the user based on the phone number
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        // Check if the OTP matches
+        if (user.otp != otp) {
+            return res.status(400).json({ error: 'Invalid OTP.' });
+        }
+
+        // OTP is correct, you can now clear the OTP from the user document and mark the user as verified
+        user.otp = null; // Optionally, you may want to nullify the OTP after verification
+        user.isVerified = true; // You can set an "isVerified" field to true if you track verification status
+        await user.save();
+
+        res.status(200).json({ message: 'OTP verified successfully!' });
+    } catch (error) {
+        console.error('Failed to verify OTP:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+
 
 const loginUser = async (req, res) => {
     try {
@@ -316,57 +381,12 @@ const userProfileDetails = async (req, res) => {
         const { Id } = req;
         const user = await User.findById(Id, { token: 0 });
         const previousRequests = await Prev.find({ requestorId: Id });
-        res.status(200).json({ user, message:"these are the previous requests =>",previousRequests });
+        res.status(200).json({ user, message: "these are the previous requests =>", previousRequests });
 
     } catch (error) {
         res.status(500).json({ message: 'Server error ', error: error.message });
 
     }
 }
-
-const sendOtpViaEmail = async (req, res) => {
-    try {
-        const { phoneNumber, userEmail } = req.body; // Ensure you get the username from the request body or context
-
-        if (!userEmail || !phoneNumber) {
-            return res.status(400).json({ error: "Email and phone number is required for OTP verification" });
-        }
-
-        const user = await User.findOne({ phoneNumber });
-
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: "twoobgmi@gmail.com",
-                pass: "ozeuccgzxmyznxdr",
-            },
-        });
-
-        const OTP = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit number
-
-        const mailOptions = {
-            from: "twoobgmi@gmail.com",
-            to: userEmail,
-            subject: "OTP Verification",
-            text: `Dear sir, The 6 digit OTP for your donation app account is ${OTP}`,
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                res.status(500).send({ error: "Error sending email" });
-            } else {
-                console.log("Email sent: " + info.response);
-                res.status(201).json({
-                    message: "OTP Sent successfully !",
-                });
-            }
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-};
-
 
 module.exports = { addUser, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };

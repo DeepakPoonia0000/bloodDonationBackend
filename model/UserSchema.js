@@ -6,8 +6,10 @@ const addUser = new mongoose.Schema({
   bloodGroup: String,
   name: String,
   phoneNumber: String,
+  email: String,
   password: String,
   token: String,
+  otp: Number,
   location: {
     longitude: Number,
     latitude: Number,
@@ -27,6 +29,7 @@ const addUser = new mongoose.Schema({
     default: Date.now,
   },
   status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
+  isVerified: { type: Boolean, default: false }, // Correctly defined
 });
 
 
