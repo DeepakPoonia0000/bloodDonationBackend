@@ -1,5 +1,6 @@
 // const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 
 const User = require('../model/UserSchema')
 const Donater = require('../model/RequestorSchema');
@@ -206,10 +207,6 @@ const verifyToken = async (req, res, next) => {
     }
 };
 
-
-
-
-
 const addUser = async (req, res) => {
     try {
         const { phoneNumber, password, bloodGroup } = req.body;
@@ -327,7 +324,49 @@ const userProfileDetails = async (req, res) => {
     }
 }
 
+const sendOtpViaEmail = async (req, res) => {
+    try {
+        const { phoneNumber, userEmail } = req.body; // Ensure you get the username from the request body or context
+
+        if (!userEmail || !phoneNumber) {
+            return res.status(400).json({ error: "Email and phone number is required for OTP verification" });
+        }
+
+        const user = await User.findOne({ phoneNumber });
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "twoobgmi@gmail.com",
+                pass: "ozeuccgzxmyznxdr",
+            },
+        });
+
+        const OTP = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit number
+
+        const mailOptions = {
+            from: "twoobgmi@gmail.com",
+            to: userEmail,
+            subject: "OTP Verification",
+            text: `Dear sir, The 6 digit OTP for your donation app account is ${OTP}`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                res.status(500).send({ error: "Error sending email" });
+            } else {
+                console.log("Email sent: " + info.response);
+                res.status(201).json({
+                    message: "OTP Sent successfully !",
+                });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
 
 
 module.exports = { addUser, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
-
