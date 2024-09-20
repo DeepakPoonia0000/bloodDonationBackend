@@ -389,4 +389,4 @@ const userProfileDetails = async (req, res) => {
     }
 }
 
-module.exports = { addUser, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
+module.exports = { addUser,verifyOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
