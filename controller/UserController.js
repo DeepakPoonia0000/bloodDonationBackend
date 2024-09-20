@@ -210,7 +210,7 @@ const verifyToken = async (req, res, next) => {
 const addUser = async (req, res) => {
     try {
         const { phoneNumber, password, bloodGroup, email } = req.body;
-        console.log(phoneNumber, password, bloodGroup);
+        // console.log(phoneNumber, password, bloodGroup);
         if (!phoneNumber || !password || !bloodGroup) {
             return res.status(400).json({ error: 'Phone Number, password, and blood group are necessary for customer' });
         }
