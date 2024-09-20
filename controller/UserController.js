@@ -248,19 +248,15 @@ const addUser = async (req, res) => {
             text: `Dear sir, The 6-digit OTP for your donation app account is ${OTP}`,
         };
 
-        newUser.otp = OTP; // Assign OTP to newUser
-        await newUser.save(); // Save the newUser with OTP
+        newUser.otp = OTP; // Store the OTP directly or hash it for extra security
+        await newUser.save(); // Save the new user with OTP
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                return res.status(500).send({ error: "Error sending email" });
-            } else {
-                console.log("Email sent: " + info.response);
-                return res.status(201).json({
-                    message: "OTP Sent successfully!",
-                });
-            }
+        // Send the OTP email
+        await transporter.sendMail(mailOptions);
+
+        // Respond to client after successful email
+        return res.status(201).json({
+            message: "OTP sent successfully!",
         });
 
     } catch (error) {
@@ -269,9 +265,60 @@ const addUser = async (req, res) => {
     }
 };
 
+const forgetPasswordOtp = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Check if the email is provided
+        if (!email) {
+            return res.status(400).json({ error: "Email is required" });
+        }
+
+        // Check if the user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "twoobgmi@gmail.com",
+                pass: "ozeuccgzxmyznxdr",
+            },
+        });
+
+        const OTP = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit number
+
+        const mailOptions = {
+            from: "twoobgmi@gmail.com",
+            to: email,
+            subject: "OTP Verification",
+            text: `Dear sir, The 6-digit OTP for your donation app account is ${OTP}`,
+        };
+
+        // Optionally hash the OTP before saving to increase security
+        // const hashedOTP = await bcrypt.hash(OTP.toString(), 10);
+        user.otp = OTP; // Direct assignment, or assign hashed OTP if hashed
+        await user.save(); // Save the user with the OTP
+
+        // Using async/await for better handling of sendMail
+        await transporter.sendMail(mailOptions);
+
+        // Respond only after email is successfully sent
+        return res.status(200).json({
+            message: "OTP sent successfully!",
+        });
+
+    } catch (error) {
+        console.error('Failed to send OTP:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 const verifyOtp = async (req, res) => {
     try {
-        const { email, otp } = req.body;
+        const { email, otp, newPassword } = req.body;
 
         if (!email || !otp) {
             return res.status(400).json({ error: 'Email and OTP are required.' });
@@ -288,12 +335,17 @@ const verifyOtp = async (req, res) => {
             return res.status(400).json({ error: 'Invalid OTP.' });
         }
 
+        if (newPassword) {
+            user.password = newPassword;
+            user.save();
+        }
+
         // OTP is correct, you can now clear the OTP from the user document and mark the user as verified
         user.otp = null; // Optionally, you may want to nullify the OTP after verification
         user.isVerified = true; // You can set an "isVerified" field to true if you track verification status
         await user.save();
 
-        res.status(200).json({ message: 'OTP verified successfully!' });
+        res.status(200).json({ message: 'Operation successfully!' });
     } catch (error) {
         console.error('Failed to verify OTP:', error);
         res.status(500).json({ error: 'Server error' });
@@ -391,4 +443,4 @@ const userProfileDetails = async (req, res) => {
     }
 }
 
-module.exports = { addUser, verifyOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
+module.exports = { addUser, verifyOtp,forgetPasswordOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
