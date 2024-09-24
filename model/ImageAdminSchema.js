@@ -4,14 +4,17 @@ const imageSectionSchema = new mongoose.Schema({
     imageOne: {
         type: String,
         required: false,
+        default:"cloudinaryImageLink"
     },
     imageTwo: {
         type: String,
-        required: false
+        required: false,
+        default:"cloudinaryImageLink"
     },
     imageThree: {
         type: String,
-        required: false
+        required: false,
+        default:"cloudinaryImageLink"
     }
 });
 

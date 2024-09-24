@@ -239,7 +239,7 @@ app.get('/signature',
     generateSignature
 )
 
-app.put('updateImage',
+app.put('/updateImage',
     // adminVerifyToken,
     updateImage
 )

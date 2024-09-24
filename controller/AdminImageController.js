@@ -63,6 +63,14 @@ const updateImage = async (req, res) => {
     const { section, imageNumber, imageUrl } = req.body;
 
     try {
+        let createExistingImage = await Image.findOne();
+
+        if (!createExistingImage) {
+            // Create a new document if it doesn't exist
+            createExistingImage = new Image({});
+            await createExistingImage.save();
+        }
+
         // Check if the image field already has an image
         const existingImage = await Image.findOne({}, { [`${section}.${imageNumber}`]: 1 });
 
@@ -84,7 +92,7 @@ const updateImage = async (req, res) => {
                     { [`${section}.${imageNumber}`]: '' }, // Set the field to an empty string or `null`
                     { new: true, useFindAndModify: false }
                 );
-            } 
+            }
             // else {
             //     console.error('Failed to delete existing image from Cloudinary:', result);
             //     return res.status(400).json({ message: 'Failed to delete image from Cloudinary', result });
@@ -106,4 +114,4 @@ const updateImage = async (req, res) => {
 };
 
 
-module.exports = { deleteImage, generateSignature,updateImage };
+module.exports = { deleteImage, generateSignature, updateImage };
