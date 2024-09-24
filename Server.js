@@ -19,7 +19,7 @@ const {
     hospitlDonationDetail,
     hospitalProfileDetails
 } = require('./controller/HospitalController');
-const { deleteImage, generateSignature, updateImage } = require('./controller/AdminImageController');
+const { deleteImage, generateSignature, updateImage, getImages } = require('./controller/AdminImageController');
 
 
 const app = express();
@@ -242,6 +242,10 @@ app.get('/signature',
 app.put('/updateImage',
     // adminVerifyToken,
     updateImage
+)
+
+app.get('/getImages',
+    getImages
 )
 
 

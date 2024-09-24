@@ -113,5 +113,13 @@ const updateImage = async (req, res) => {
     }
 };
 
+const getImages = async (req, res) => {
+    try {
+        const images = await Image.find();
+        res.status(200).json(images);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error ', error });
+    }
+}
 
-module.exports = { deleteImage, generateSignature, updateImage };
+module.exports = { deleteImage, generateSignature, updateImage ,getImages};
