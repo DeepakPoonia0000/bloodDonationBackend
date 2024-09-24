@@ -19,6 +19,7 @@ const {
     hospitlDonationDetail,
     hospitalProfileDetails
 } = require('./controller/HospitalController');
+const { deleteImage, generateSignature, updateImage } = require('./controller/AdminImageController');
 
 
 const app = express();
@@ -225,6 +226,23 @@ app.get('/hospitalProfileDetails',
     hospitalProfileDetails
 )
 
+
+
+// image upload and delete from the cloudinary;
+app.post('/deleteImage',
+    // adminVerifyToken,
+    deleteImage
+)
+
+app.get('/signature',
+    // adminVerifyToken,
+    generateSignature
+)
+
+app.put('updateImage',
+    // adminVerifyToken,
+    updateImage
+)
 
 
 
