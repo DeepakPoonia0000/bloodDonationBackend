@@ -9,6 +9,8 @@ cloudinary.config({
     api_secret: 'hDe9rnUIzmc96__HGmP2-pkeJ6A',
 });
 
+// const uploadPreset
+
 const deleteImage = async (req, res) => {
     try {
         const { imageUrl, section, imageNumber } = req.body;

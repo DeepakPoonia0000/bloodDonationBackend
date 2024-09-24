@@ -32,6 +32,10 @@ const imageSchema = new mongoose.Schema({
     sectionThree: {
         type: imageSectionSchema,
         default: {} // Create sectionThree with default image values
+    },
+    sectionFour: {
+        type: imageSectionSchema,
+        default: {} // Create sectionThree with default image values
     }
 });
 
