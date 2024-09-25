@@ -19,6 +19,24 @@ const imageSectionSchema = new mongoose.Schema({
     }
 });
 
+const videoSectionSchema = new mongoose.Schema({
+    videoOne: {
+        type: String,
+        required: true,
+        default: "cloudinaryImageLink" // Default value for imageOne
+    },
+    videoTwo: {
+        type: String,
+        required: true,
+        default: "cloudinaryImageLink" // Default value for imageTwo
+    },
+    videoThree: {
+        type: String,
+        required: true,
+        default: "cloudinaryImageLink" // Default value for imageThree
+    }
+});
+
 // Main schema for image with three sections
 const imageSchema = new mongoose.Schema({
     sectionOne: {
@@ -34,6 +52,10 @@ const imageSchema = new mongoose.Schema({
         default: {} // Create sectionThree with default image values
     },
     sectionFour: {
+        type: imageSectionSchema,
+        default: {} // Create sectionThree with default image values
+    },
+    sectionFive: {
         type: imageSectionSchema,
         default: {} // Create sectionThree with default image values
     }
