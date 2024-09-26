@@ -235,12 +235,12 @@ app.post('/deleteImage',
 )
 
 app.get('/signature',
-    // adminVerifyToken,
+    adminVerifyToken,
     generateSignature
 )
 
 app.put('/updateImage',
-    // adminVerifyToken,
+    adminVerifyToken,
     updateImage
 )
 
