@@ -1,5 +1,7 @@
 const Donater = require('../model/RequestorSchema');
+const UserImage = require('../model/UserImagesSchema');
 const User = require('../model/UserSchema');
+const cloudinary = require("cloudinary").v2;
 
 const addDonorsToTheRequest = async (req, res) => {
   try {
@@ -95,6 +97,59 @@ const getDonorsResponses = async (req, res) => {
   }
 }
 
+const User = require('./path/to/UserModel'); // Ensure correct path to your User model
+const UserImage = require('./path/to/UserImageModel'); // Path to your UserImage model
+const cloudinary = require('cloudinary').v2; // Ensure Cloudinary is properly configured
+
+const uploadUserImage = async (req, res) => {
+  const { imageUrl } = req.body; // Ensure you get necessary fields
+  const Id = req.Id; // Assuming you get user Id from request (e.g., from JWT or session)
+
+  try {
+    // Find user by Id
+    const user = await User.findById(Id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const userName = user.name;
+    const userNumber = user.userNumber;
+
+    // Check if the user already has an image
+    const existingImage = await UserImage.findOne({ userNumber });
+
+    if (existingImage) {
+      const publicId = imageUrl.split('/').pop().split('.')[0]; // Extract public ID from Cloudinary URL
+
+      if (!publicId) {
+        return res.status(400).json({ message: 'Public ID could not be extracted' });
+      }
+
+      // Delete from Cloudinary
+      const result = await cloudinary.uploader.destroy(publicId);
+
+      // Update the existing image with the new URL
+      existingImage.imageLink = imageUrl; // Update image link
+      await existingImage.save(); // Save changes
+      return res.status(200).json({ message: 'Image updated successfully', existingImage });
+    }
+
+    // If user does not have an image, create a new one
+    const newUserImage = new UserImage({
+      imageLink: imageUrl,
+      userName: userName,
+      userNumber: userNumber,
+    });
+
+    // Save new user image to the database
+    await newUserImage.save();
+
+    return res.status(201).json({ message: 'Image uploaded successfully', newUserImage });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    return res.status(500).json({ message: 'Server error', error });
+  }
+};
 
 
 module.exports = { addDonorsToTheRequest, getDonorsResponses };

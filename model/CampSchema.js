@@ -19,8 +19,15 @@ const campSchema = new mongoose.Schema({
         required: true,
     },
     location: {
-        latitude: Number,
-        longitude: Number
+        type: {
+            type: String, // GeoJSON type, which should always be 'Point'
+            enum: ['Point'], // Only allow 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number], // Array of numbers for [longitude, latitude]
+            required: true
+        }
     },
     createdAt: {
         type: Date,

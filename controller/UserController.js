@@ -209,10 +209,10 @@ const verifyToken = async (req, res, next) => {
 
 const addUser = async (req, res) => {
     try {
-        const { phoneNumber, password, bloodGroup, email } = req.body;
+        const { phoneNumber, password, bloodGroup, email, name } = req.body;
 
-        if (!phoneNumber || !password || !bloodGroup) {
-            return res.status(400).json({ error: 'Phone Number, password, and blood group are necessary for customer' });
+        if (!phoneNumber || !password || !bloodGroup || !name) {
+            return res.status(400).json({ error: 'Phone Number, password, name  and blood group are necessary for customer' });
         }
 
         const existingNumber = await User.findOne({ phoneNumber });
@@ -224,11 +224,18 @@ const addUser = async (req, res) => {
             await User.findByIdAndDelete(existingNumber._id);
         }
 
+        const lastUser = await User.findOne().sort({ userNumber: -1 });
+
+        // Generate the next user number
+        const nextUserNumber = lastUser ? lastUser.userNumber + 1 : 1;
+
         const newUser = await User.create({
             phoneNumber,
+            name,
             password,
             bloodGroup,
             email, // Include email when creating the user
+            userNumber: nextUserNumber // Assign the unique user number
         });
 
         const transporter = nodemailer.createTransport({

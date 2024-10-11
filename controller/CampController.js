@@ -10,7 +10,7 @@ const deleteCamp = async (req, res) => {
             return res.status(404).json({ message: 'Camp not found' });
         }
 
-        if (camp.organiserId != organiserId) {      
+        if (camp.organiserId != organiserId) {
             return res.status(403).json({ message: 'You are not authorized to delete this camp' });
         }
 
@@ -32,13 +32,16 @@ const sendCampRequest = async (req, res) => {
 
     try {
         const newCamp = await Camp.create({
-            location,
+            location: {
+                type: 'Point',
+                coordinates: [location.longitude, location.latitude] // GeoJSON format: [lng, lat]
+            },
             organiserId,
             campName,
             campAddress,
             startDate,
             endDate,
-            deleteAt:endDate,
+            deleteAt: endDate,
         });
 
         res.status(201).json({ message: 'Camp details saved successfully!', newCamp });

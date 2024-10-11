@@ -10,6 +10,12 @@ const addUser = new mongoose.Schema({
   password: String,
   token: String,
   otp: Number,
+  userNumber: {
+    type: Number,
+    unique: true, // Ensure unique userNumber for each user
+    required: true,
+    index: true // Add index for faster lookup
+  },
   location: {
     longitude: Number,
     latitude: Number,
