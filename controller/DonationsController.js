@@ -99,7 +99,7 @@ const getDonorsResponses = async (req, res) => {
 
 const uploadUserImage = async (req, res) => {
   const { imageUrl } = req.body; // Ensure you get necessary fields
-  const Id = req.Id; // Assuming you get user Id from request (e.g., from JWT or session)
+  const { Id } = req; // Assuming you get user Id from request (e.g., from JWT or session)
 
   try {
     // Find user by Id
@@ -113,9 +113,11 @@ const uploadUserImage = async (req, res) => {
 
     // Check if the user already has an image
     const existingImage = await UserImage.findOne({ userNumber });
+    const existingImageUrl=  existingImage.imageLink;
+
 
     if (existingImage) {
-      const publicId = imageUrl.split('/').pop().split('.')[0]; // Extract public ID from Cloudinary URL
+      const publicId = existingImageUrl.split('/').pop().split('.')[0]; // Extract public ID from Cloudinary URL
 
       if (!publicId) {
         return res.status(400).json({ message: 'Public ID could not be extracted' });
