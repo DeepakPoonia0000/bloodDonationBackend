@@ -6,9 +6,9 @@ const imageSchema = new mongoose.Schema({
         required: true,
         default: "cloudinaryImageLink" // Default value for imageOne
     },
-    userName: {
+    name: {
         type: String,
-        required: true,
+        // required: true,
     },
     userNumber: {
         type: Number,

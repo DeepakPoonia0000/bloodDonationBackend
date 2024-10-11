@@ -97,37 +97,35 @@ const getDonorsResponses = async (req, res) => {
   }
 }
 
+
 const uploadUserImage = async (req, res) => {
+
   const { imageUrl } = req.body; // Ensure you get necessary fields
-  const { Id } = req; // Assuming you get user Id from request (e.g., from JWT or session)
+  const { Id } = req; // Ensure you're getting the correct user ID
 
   try {
     // Find user by Id
     const user = await User.findById(Id);
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const userName = user.name;
+    const name = user.name;
     const userNumber = user.userNumber;
 
     // Check if the user already has an image
     const existingImage = await UserImage.findOne({ userNumber });
-    const existingImageUrl=  existingImage.imageLink;
-
 
     if (existingImage) {
-      const publicId = existingImageUrl.split('/').pop().split('.')[0]; // Extract public ID from Cloudinary URL
-
-      if (!publicId) {
-        return res.status(400).json({ message: 'Public ID could not be extracted' });
-      }
+      const existingImageUrl = existingImage.imageLink; // Check if existingImage exists
+      const publicId = existingImageUrl.split('/').pop().split('.')[0]; // Extract public ID
 
       // Delete from Cloudinary
-      const result = await cloudinary.uploader.destroy(publicId);
+      await cloudinary.uploader.destroy(publicId);
 
       // Update the existing image with the new URL
-      existingImage.imageLink = imageUrl; // Update image link
+      existingImage.imageLink = imageUrl;
       await existingImage.save(); // Save changes
       return res.status(200).json({ message: 'Image updated successfully', existingImage });
     }
@@ -135,8 +133,8 @@ const uploadUserImage = async (req, res) => {
     // If user does not have an image, create a new one
     const newUserImage = new UserImage({
       imageLink: imageUrl,
-      userName: userName,
-      userNumber: userNumber,
+      name, // Use userName for consistency
+      userNumber,
     });
 
     // Save new user image to the database
@@ -148,6 +146,7 @@ const uploadUserImage = async (req, res) => {
     return res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 
 module.exports = { addDonorsToTheRequest, getDonorsResponses, uploadUserImage };
