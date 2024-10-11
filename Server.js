@@ -51,6 +51,10 @@ app.get('/profileDetails',
     userProfileDetails
 )
 
+app.get('/usersignature',
+    verifyToken,
+    generateSignature
+)
 app.post('/uploadUserImage', verifyToken, uploadUserImage)
 
 // app.post('/getLocation', verifyToken, getBloodRequests)
