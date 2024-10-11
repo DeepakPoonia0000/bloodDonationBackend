@@ -97,10 +97,6 @@ const getDonorsResponses = async (req, res) => {
   }
 }
 
-const User = require('./path/to/UserModel'); // Ensure correct path to your User model
-const UserImage = require('./path/to/UserImageModel'); // Path to your UserImage model
-const cloudinary = require('cloudinary').v2; // Ensure Cloudinary is properly configured
-
 const uploadUserImage = async (req, res) => {
   const { imageUrl } = req.body; // Ensure you get necessary fields
   const Id = req.Id; // Assuming you get user Id from request (e.g., from JWT or session)
