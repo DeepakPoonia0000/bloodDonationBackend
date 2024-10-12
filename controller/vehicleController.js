@@ -134,13 +134,13 @@ const updateVehicle = async (req, res) => {
 // Delete a vehicle by ID
 const deleteVehicle = async (req, res) => {
   try {
-    const { vehicleId } = req.params;
-    const { Id } = req;
+    const { vehicleId } = req.query;
+    // const { Id } = req;
 
-    const vehicle = await Vehicle.findById(vehicleId)
-    if (vehicle.campId != Id) {
-      return res.status(403).send({ error: 'You are not authorized to delete this vehicle' });
-    }
+    // const vehicle = await Vehicle.findById(vehicleId)
+    // if (vehicle.campId != Id) {
+    //   return res.status(403).send({ error: 'You are not authorized to delete this vehicle' });
+    // }
 
 
     // Find and delete the vehicle
