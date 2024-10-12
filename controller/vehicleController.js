@@ -55,7 +55,7 @@ const registerVehicle = async (req, res) => {
     }
 
     // Set expiration date (you can adjust this logic as needed)
-    const expirationDate = availabilityDate; // Set this to whatever logic you need
+    const expirationDate = dateOfAvailability; // Set this to whatever logic you need
     expirationDate.setDate(expirationDate.getDate() + availableDays);
     // Create and save new vehicle
     const newVehicle = new Vehicle({

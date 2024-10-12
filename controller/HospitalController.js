@@ -99,7 +99,10 @@ const signupHospital = async (req, res) => {
             name,
             address,
             contact,
-            location,
+            location: {
+                type: 'Point',
+                coordinates: [location.longitude, location.latitude] // GeoJSON format: [lng, lat]
+            },
             hasBloodDonationCenter,
             facilities,
             website,
@@ -394,6 +397,36 @@ const hospitalProfileDetails = async (req, res) => {
     }
 }
 
+const getBloodRequestsHospital = async (req, res) => {
+    try {
+        const { location } = req.query;
+
+        const lng = Number(location.longitude);
+        const lat = Number(location.latitude);
+        console.log(lng, lat)
+
+        const radiusInKilometers = 50;
+        const earthRadiusInKilometers = 6378.1;
+        const radiusInRadians = radiusInKilometers / earthRadiusInKilometers;
+
+        const query2 = {
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radiusInRadians],
+                },
+            }
+        };
+
+        const hospitalRequests = await HospitalDonation.find(query2).limit(20)
+
+        res.status(200).json({ hospitalRequests });
+
+    } catch (error) {
+        console.error('Failed to add user:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     signupHospital,
     loginHospital,
@@ -405,6 +438,7 @@ module.exports = {
     approveHospitalDonation,
     getHospitalDonorsResponses,
     addDonorsToTheHospitalRequest,
-    hospitlDonationDetail
+    hospitlDonationDetail,
+    getBloodRequestsHospital
 };
 

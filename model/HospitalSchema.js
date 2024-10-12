@@ -14,8 +14,15 @@ const hospitalSchema = new Schema({
         email: { type: String, required: true }
     },
     location: {
-        latitude: { type: Number, required: true },
-        longitude: { type: Number, required: true }
+        type: {
+            type: String, // GeoJSON type, which should always be 'Point'
+            enum: ['Point'], // Only allow 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number], // Array of numbers for [longitude, latitude]
+            required: true
+        }
     },
     hasBloodDonationCenter: { type: Boolean, default: false },
     website: { type: String, default: '' },

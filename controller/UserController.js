@@ -42,7 +42,7 @@ const getBloodRequests = async (req, res) => {
         const lat = Number(location.latitude);
         console.log(lng, lat)
 
-        const radiusInKilometers = 20;
+        const radiusInKilometers = 50;
         const earthRadiusInKilometers = 6378.1;
         const radiusInRadians = radiusInKilometers / earthRadiusInKilometers;
 
@@ -69,7 +69,7 @@ const getBloodRequests = async (req, res) => {
         }
 
         const donaters = await Donater.find(query).limit(100);
-        const hospitalRequests = await HospitalDonation.find(query2).limit(10)
+        const hospitalRequests = await HospitalDonation.find(query2).limit(20)
         const camps = await Camp.find(query2);
         console.log("number of entries sent =>\n", camps.length);
         donaters.reverse();
