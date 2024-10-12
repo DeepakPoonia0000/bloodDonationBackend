@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const VehicleVolunteerSchema = new mongoose.Schema({
     campId: {
         type: String,
-        required: true,
-        index: true,
+        // required: true,
+        // index: true,
     },
     ownerName: {
         type: String,
