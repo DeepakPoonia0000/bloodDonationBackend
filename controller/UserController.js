@@ -35,8 +35,8 @@ const getCompatibleBloodGroups = (bloodGroup) => {
 
 const getBloodRequests = async (req, res) => {
     try {
-        // const { location } = req.body;
-        const { location } = req.query;
+        const { location } = req.body;
+        // const { location } = req.query;
         const bloodGroup = req.bloodGroup;
         const lng = Number(location.longitude);
         const lat = Number(location.latitude);

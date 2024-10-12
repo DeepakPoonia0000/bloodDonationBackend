@@ -417,7 +417,7 @@ const getBloodRequestsHospital = async (req, res) => {
             }
         };
 
-        const hospitalRequests = await HospitalDonation.find(query2).limit(20)
+        const hospitalRequests = await HospitalDonation.find(query2).limit(100)
 
         res.status(200).json({ hospitalRequests });
 

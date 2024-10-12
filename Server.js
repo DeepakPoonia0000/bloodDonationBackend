@@ -3,11 +3,11 @@ const cors = require('cors');
 const { addUser, verifyOtp, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation, userProfileDetails, deleteBloodRequest, forgetPasswordOtp } = require('./controller/UserController')
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
+const { rateLimit } = require('express-rate-limit')
 const { addDonorsToTheRequest, getDonorsResponses, uploadUserImage } = require('./controller/DonationsController');
 const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent, deleteBloodRequestAdmin } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
 const { createBanner, getAllBanners, deleteBanner } = require('./controller/BannerController');
-const { deleteVehicle, updateVehicle, getAllVehicles, registerVehicle, getCampVehicles } = require('./controller/vehicleController');
 
 
 const {
@@ -26,6 +26,11 @@ const {
 } = require('./controller/HospitalController');
 const { deleteImage, generateSignature, updateImage, getImages } = require('./controller/AdminImageController');
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 3, // Limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.'
+});
 
 const app = express();
 const PORT = 7000;
@@ -61,8 +66,6 @@ app.get('/usersignature',
     generateSignature
 )
 app.post('/uploadUserImage', verifyToken, uploadUserImage)
-
-// app.post('/getLocation', verifyToken, getBloodRequests)
 
 app.get('/getLocation',
     verifyToken,
@@ -246,9 +249,8 @@ app.get('/getAllHospitalRequests', getBloodRequestsHospital)
 
 
 
-// image upload and delete from the cloudinary;
 app.post('/deleteImage',
-    // adminVerifyToken,
+    adminVerifyToken,
     deleteImage
 )
 
@@ -262,14 +264,6 @@ app.put('/updateImage',
     updateImage
 )
 
-app.get('/getCampVehiclesAdmin', adminVerifyToken, getCampVehicles)
-
-app.post('/registerVehicle', registerVehicle);
-app.get('/getAllVehicles', getAllVehicles)
-app.delete('/deleteVehicle', adminVerifyToken, deleteVehicle)
-
-
-
 app.get('/getImages',
     getImages
 )
@@ -278,9 +272,8 @@ app.get('/getImages',
 
 cron.schedule('0 0 */4 * *', () => {
     checkDonationEligibility();
-})
+});
 
-// app.get('/shops', verifyToken, getShops);
 
 app.listen(PORT, (error) => {
     if (!error) {

@@ -24,6 +24,7 @@ const hospitalSchema = new Schema({
             required: true
         }
     },
+    bloodBankDetails:{},
     hasBloodDonationCenter: { type: Boolean, default: false },
     website: { type: String, default: '' },
     specialInstructions: { type: String, default: '' },
