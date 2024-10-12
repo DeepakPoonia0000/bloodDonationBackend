@@ -17,47 +17,29 @@ const registerVehicle = async (req, res) => {
       availableDays
     } = req.body;
 
-    // Validate request body
-    if (!ownerName || !vehicleType || !licensePlate || !capacity || !contactNumber ||
-      //  !campId ||
-      !dateOfAvailability) {
+    // Validate required fields
+    if (!ownerName || !vehicleType || !licensePlate || !capacity || !contactNumber || !dateOfAvailability || !availableDays) {
       return res.status(400).send({ error: 'All fields are required.' });
     }
 
     if (availableDays > 7) {
-      return res.status(400).send({ error: 'Available days should be less than 7' });
+      return res.status(400).send({ error: 'Available days should be less than or equal to 7.' });
     }
 
-    // Get the current camp
-    const currentCamp = await Camp.findById(campId);
-    // if (!currentCamp) {
-    //   return res.status(404).send({ error: 'Camp not found.' });
-    // }
-
-    // const campStartDate = new Date(currentCamp.startDate);
-    // const campEndDate = new Date(currentCamp.endDate);
-
-    // Parse and validate the user-provided dateOfAvailability
     const availabilityDate = new Date(dateOfAvailability);
     if (isNaN(availabilityDate.getTime())) {
       return res.status(400).send({ error: 'Invalid date of availability provided.' });
     }
 
-    // Check if the dateOfAvailability is within the camp dates
-    // if (availabilityDate < campStartDate || availabilityDate > campEndDate) {
-    //   return res.status(400).send({ error: `Date of availability must be between ${campStartDate.toISOString()} and ${campEndDate.toISOString()}.` });
-    // }
-
-    // Check if the vehicle already exists based on license plate
     const existingVehicle = await Vehicle.findOne({ licensePlate });
     if (existingVehicle) {
       return res.status(400).send({ error: 'Vehicle with this license plate already registered.' });
     }
 
-    // Set expiration date (you can adjust this logic as needed)
-    const expirationDate = dateOfAvailability; // Set this to whatever logic you need
-    expirationDate.setDate(expirationDate.getDate() + availableDays);
-    // Create and save new vehicle
+    // Create a new expiration date by adding availableDays to the availabilityDate
+    const expirationDate = new Date(availabilityDate); // Create a new Date object
+    expirationDate.setDate(expirationDate.getDate() + availableDays); // Add availableDays
+
     const newVehicle = new Vehicle({
       campId,
       ownerName,
@@ -78,6 +60,7 @@ const registerVehicle = async (req, res) => {
     res.status(500).send({ error: 'Server error, failed to register vehicle.' });
   }
 };
+
 
 // Fetch all vehicles (optional, depending on your requirements)
 const getAllVehicles = async (req, res) => {
