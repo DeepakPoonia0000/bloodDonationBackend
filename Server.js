@@ -6,7 +6,9 @@ const cron = require('node-cron');
 const { addDonorsToTheRequest, getDonorsResponses, uploadUserImage } = require('./controller/DonationsController');
 const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent, deleteBloodRequestAdmin } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
+const { createBanner, getAllBanners, deleteBanner } = require('./controller/BannerController');
 const { deleteVehicle, updateVehicle, getAllVehicles, registerVehicle, getCampVehicles } = require('./controller/vehicleController');
+
 
 const {
     signupHospital,
@@ -178,6 +180,11 @@ app.post('/setNewEvent',
     setNewEvent
 )
 
+
+app.post('/createBanner', adminVerifyToken, createBanner)
+app.get('/getAllBanners', getAllBanners)
+app.delete('/deleteBanner', adminVerifyToken, deleteBanner)
+
 app.get('/getEvents',
 
     getEvents
@@ -235,7 +242,7 @@ app.get('/hospitalProfileDetails',
     hospitalProfileDetails
 )
 
-app.get('/getAllHospitalRequests',getBloodRequestsHospital)
+app.get('/getAllHospitalRequests', getBloodRequestsHospital)
 
 
 
@@ -266,10 +273,10 @@ app.get('/getImages',
 
 
 app.post('/registerVehicle', registerVehicle);
-app.put('/updateVehicle', updateVehicle)
+// app.put('/updateVehicle', updateVehicle)
 app.get('/getAllVehicles', getAllVehicles)
-app.delete('/deleteVehicle', verifyToken, deleteVehicle)
-app.get('/getCampVehicles', verifyToken, getCampVehicles)
+app.delete('/deleteVehicle', adminVerifyToken, deleteVehicle)
+// app.get('/getCampVehicles', verifyToken, getCampVehicles)
 
 
 cron.schedule('0 0 */4 * *', () => {
