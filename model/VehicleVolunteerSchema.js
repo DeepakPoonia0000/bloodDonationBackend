@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 // Vehicle Schema for volunteer work
 const VehicleVolunteerSchema = new mongoose.Schema({
+    campId: {
+        type: String,
+        required: true,
+        index: true,
+    },
     ownerName: {
         type: String,
         required: true,
@@ -36,8 +41,18 @@ const VehicleVolunteerSchema = new mongoose.Schema({
     registeredAt: {
         type: Date,
         default: Date.now
+    },
+    dateOfAvailability: {
+        type: Date,
+        required: true,
+    },
+    expirationDate: {
+        type: Date,
+        required: true // You can choose to make it optional
     }
 });
+
+VehicleVolunteerSchema.index({ expirationDate: 1 }, { expireAfterSeconds: 0 });
 
 // Create the Vehicle model
 const Vehicle = mongoose.model('Vehicle', VehicleVolunteerSchema);
