@@ -263,7 +263,10 @@ app.put('/updateImage',
 )
 
 app.get('/getCampVehiclesAdmin', adminVerifyToken, getCampVehicles)
-app.delete('/deleteVehicleAdmin', adminVerifyToken, deleteVehicle)
+
+app.post('/registerVehicle', registerVehicle);
+app.get('/getAllVehicles', getAllVehicles)
+app.delete('/deleteVehicle', adminVerifyToken, deleteVehicle)
 
 
 
@@ -271,12 +274,6 @@ app.get('/getImages',
     getImages
 )
 
-
-app.post('/registerVehicle', registerVehicle);
-// app.put('/updateVehicle', updateVehicle)
-app.get('/getAllVehicles', getAllVehicles)
-app.delete('/deleteVehicle', adminVerifyToken, deleteVehicle)
-// app.get('/getCampVehicles', verifyToken, getCampVehicles)
 
 
 cron.schedule('0 0 */4 * *', () => {
