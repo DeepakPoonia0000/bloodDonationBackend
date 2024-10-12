@@ -12,8 +12,15 @@ const hospitalDonation = new mongoose.Schema({
         bloodGroup: String,
     }],
     location: {
-        longitude: Number,
-        latitude: Number
+        type: {
+            type: String, // GeoJSON type, which should always be 'Point'
+            enum: ['Point'], // Only allow 'Point'
+            required: true
+        },
+        coordinates: {
+            type: [Number], // Array of numbers for [longitude, latitude]
+            required: true
+        }
     },
     dateOfQuery: {
         type: Date,
