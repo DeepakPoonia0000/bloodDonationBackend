@@ -30,9 +30,9 @@ const registerVehicle = async (req, res) => {
 
     // Get the current camp
     const currentCamp = await Camp.findById(campId);
-    if (!currentCamp) {
-      return res.status(404).send({ error: 'Camp not found.' });
-    }
+    // if (!currentCamp) {
+    //   return res.status(404).send({ error: 'Camp not found.' });
+    // }
 
     const campStartDate = new Date(currentCamp.startDate);
     const campEndDate = new Date(currentCamp.endDate);
