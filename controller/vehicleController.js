@@ -34,8 +34,8 @@ const registerVehicle = async (req, res) => {
     //   return res.status(404).send({ error: 'Camp not found.' });
     // }
 
-    const campStartDate = new Date(currentCamp.startDate);
-    const campEndDate = new Date(currentCamp.endDate);
+    // const campStartDate = new Date(currentCamp.startDate);
+    // const campEndDate = new Date(currentCamp.endDate);
 
     // Parse and validate the user-provided dateOfAvailability
     const availabilityDate = new Date(dateOfAvailability);
@@ -44,9 +44,9 @@ const registerVehicle = async (req, res) => {
     }
 
     // Check if the dateOfAvailability is within the camp dates
-    if (availabilityDate < campStartDate || availabilityDate > campEndDate) {
-      return res.status(400).send({ error: `Date of availability must be between ${campStartDate.toISOString()} and ${campEndDate.toISOString()}.` });
-    }
+    // if (availabilityDate < campStartDate || availabilityDate > campEndDate) {
+    //   return res.status(400).send({ error: `Date of availability must be between ${campStartDate.toISOString()} and ${campEndDate.toISOString()}.` });
+    // }
 
     // Check if the vehicle already exists based on license plate
     const existingVehicle = await Vehicle.findOne({ licensePlate });
