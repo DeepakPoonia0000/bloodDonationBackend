@@ -2,6 +2,12 @@
 
 const Banner = require('../model/BannerSchema'); // Adjust the path as necessary
 
+cloudinary.config({
+    cloud_name: 'dhdk9yop5',
+    api_key: '126739441976649',
+    api_secret: 'hDe9rnUIzmc96__HGmP2-pkeJ6A',
+});
+
 // Create a new banner
 const createBanner = async (req, res) => {
     try {
@@ -30,8 +36,8 @@ const getAllBanners = async (req, res) => {
 // Delete a banner by ID
 const deleteBanner = async (req, res) => {
     try {
-        const { id } = req.params;
-        const deletedBanner = await Banner.findByIdAndDelete(id);
+        const { bannerId } = req.params;
+        const deletedBanner = await Banner.findByIdAndDelete(bannerId);
         if (!deletedBanner) {
             return res.status(404).json({ message: 'Banner not found' });
         }
