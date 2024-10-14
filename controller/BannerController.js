@@ -1,6 +1,7 @@
 // bannerController.js
 
 const Banner = require('../model/BannerSchema'); // Adjust the path as necessary
+const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
     cloud_name: 'dhdk9yop5',
@@ -37,6 +38,7 @@ const getAllBanners = async (req, res) => {
 const deleteBanner = async (req, res) => {
     try {
         const { bannerId } = req.params;
+        const banner = await Banner.findById(bannerId);
         const deletedBanner = await Banner.findByIdAndDelete(bannerId);
         if (!deletedBanner) {
             return res.status(404).json({ message: 'Banner not found' });
