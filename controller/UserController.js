@@ -241,8 +241,8 @@ const addUser = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "twoobgmi@gmail.com",
-                pass: "ozeuccgzxmyznxdr",
+                user: "deepak7009verma@gmail.com",
+                pass: "xtehwzivizvxsgja",
             },
         });
 
@@ -290,8 +290,8 @@ const forgetPasswordOtp = async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "twoobgmi@gmail.com",
-                pass: "ozeuccgzxmyznxdr",
+                user: "deepak7009verma@gmail.com",
+                pass: "xtehwzivizvxsgja",
             },
         });
 
