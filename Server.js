@@ -22,7 +22,8 @@ const {
     addDonorsToTheHospitalRequest,
     hospitlDonationDetail,
     hospitalProfileDetails,
-    getBloodRequestsHospital
+    getBloodRequestsHospital,
+    getNgoMembers
 } = require('./controller/HospitalController');
 const { deleteImage, generateSignature, updateImage, getImages } = require('./controller/AdminImageController');
 
@@ -244,6 +245,8 @@ app.get('/hospitalProfileDetails',
     HospitalverifyToken,
     hospitalProfileDetails
 )
+
+app.get('/getNgoMembers',HospitalverifyToken,getNgoMembers)
 
 app.get('/getAllHospitalRequests', getBloodRequestsHospital)
 

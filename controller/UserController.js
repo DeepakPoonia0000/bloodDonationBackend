@@ -8,6 +8,7 @@ const Prev = require('../model/PreviousSchema');
 const Camp = require('../model/CampSchema');
 const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema');
+const Ngo = require('../model/NgoSchema');
 
 const jwtSecret = 'Thr0bZyphrnQ8vkJumpl3BaskEel@ticsXzylN!gmaPneuma';
 
@@ -209,7 +210,7 @@ const verifyToken = async (req, res, next) => {
 
 const addUser = async (req, res) => {
     try {
-        const { phoneNumber, password, bloodGroup, email, name } = req.body;
+        const { phoneNumber, password, bloodGroup, email, name, ngoName } = req.body;
 
         if (!phoneNumber || !password || !bloodGroup || !name) {
             return res.status(400).json({ error: 'Phone Number, password, name  and blood group are necessary for customer' });
@@ -237,6 +238,15 @@ const addUser = async (req, res) => {
             email, // Include email when creating the user
             userNumber: nextUserNumber // Assign the unique user number
         });
+
+        if(ngoName){
+           const ngo = await Ngo.create({
+                ngoName,
+                memberBloodGroup:bloodGroup,
+                memberEmail:email,
+                memberName:name
+           })
+        }
 
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -357,8 +367,6 @@ const verifyOtp = async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 };
-
-
 
 const loginUser = async (req, res) => {
     try {

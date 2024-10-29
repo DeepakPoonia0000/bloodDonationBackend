@@ -15,16 +15,15 @@ const hospitalSchema = new Schema({
     },
     location: {
         type: {
-            type: String, // GeoJSON type, which should always be 'Point'
-            enum: ['Point'], // Only allow 'Point'
+            type: String,
+            enum: ['Point'],
             required: true
         },
         coordinates: {
-            type: [Number], // Array of numbers for [longitude, latitude]
+            type: [Number],
             required: true
         }
     },
-    bloodBankDetails:{},
     hasBloodDonationCenter: { type: Boolean, default: false },
     website: { type: String, default: '' },
     specialInstructions: { type: String, default: '' },

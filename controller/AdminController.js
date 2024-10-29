@@ -8,7 +8,8 @@ const Prev = require('../model/PreviousSchema');
 const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema');
 const HospitalPrev = require('../model/HospitalPreviousRecords');
-const Event = require('../model/EventSchema')
+const Event = require('../model/EventSchema');
+const UserImage = require('../model/UserImagesSchema');
 
 const adminJwtSecret = 'asdfGHJKL123$%^&*QWER!@#4%^&*!%^#QTYE^@$YEW@^WYEHre5';
 
@@ -161,10 +162,11 @@ const userDetails = async (req, res) => {
         const { requestId } = req.query;
         console.log(requestId);
         const userDetails = await User.findById(requestId);
+        const userImage = await UserImage.find({ userNumber: userDetails.userNumber })
         const donationRequests = await Donater.find({ requestorId: requestId })
         const previousDonationRequests = await Prev.find({ requestorId: requestId })
 
-        res.status(200).json({ userDetails, donationRequests, previousDonationRequests });
+        res.status(200).json({ userDetails, donationRequests, previousDonationRequests, userImage });
 
     } catch (error) {
         console.log(error)
@@ -283,6 +285,5 @@ const deleteEvent = async (req, res) => {
         res.status(500).json({ message: 'Server error deleting the event', error: error.message });
     }
 }
-
 
 module.exports = { adminVerifyToken, loginAdmin, deleteUser, deleteBloodRequestAdmin, deleteHospital, approveStatus, approveHospital, pendingUsers, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent };

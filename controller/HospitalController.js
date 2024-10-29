@@ -3,6 +3,7 @@ const HospitalDonation = require('../model/HospitalDonationSchema')
 const HospitalPrev = require('../model/HospitalPreviousRecords')
 const jwt = require('jsonwebtoken');
 const User = require('../model/UserSchema');
+const Ngo = require('../model/NgoSchema');
 
 // Secret key for JWT (ideally stored in an environment variable)
 const JWT_SECRET = 'qwertyUJIKL:@#456tU&*I(Op#E$R%^YuiDEFRGH';
@@ -38,10 +39,7 @@ const HospitalverifyToken = async (req, res, next) => {
     }
 }
 
-
-
 // Function to handle hospital signup
-
 const signupHospital = async (req, res) => {
     try {
         // Extract data from request body
@@ -134,6 +132,7 @@ const loginHospital = async (req, res) => {
 
         // Find hospital by contact number
         const hospital = await Hospital.findOne({ 'contact': contact });
+        const members = await Ngo.find({ ngoName: hospital.name })
 
         if (!hospital) {
             return res.status(404).json({ message: 'Hospital not found' });
@@ -156,13 +155,14 @@ const loginHospital = async (req, res) => {
         );
 
         // Respond with success and token
-        res.status(200).json({
-            message: 'Login successful',
-            token
-        });
 
         hospital.token = token;
         await hospital.save();
+        res.status(200).json({
+            message: 'Login successful',
+            token,
+            members
+        });
     } catch (error) {
         // Handle errors
         console.error('Error logging in:', error);
@@ -389,7 +389,23 @@ const hospitalProfileDetails = async (req, res) => {
         const { id } = req;
         const user = await Hospital.findById(id, { token: 0 });
         const previousRequests = await HospitalPrev.find({ requestorId: id });
-        res.status(200).json({ user, previousRequests });
+        const members = await Ngo.find({ ngoName: user.name })
+
+        res.status(200).json({ user, previousRequests, members });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Server error ', error: error.message });
+
+    }
+}
+
+const getNgoMembers = async (req, res) => {
+    try {
+        const { id } = req;
+        const user = await Hospital.findById(id, { token: 0 });
+        const members = await Ngo.find({ ngoName: user.name })
+
+        res.status(200).json({ members });
 
     } catch (error) {
         res.status(500).json({ message: 'Server error ', error: error.message });
@@ -439,6 +455,7 @@ module.exports = {
     getHospitalDonorsResponses,
     addDonorsToTheHospitalRequest,
     hospitlDonationDetail,
-    getBloodRequestsHospital
+    getBloodRequestsHospital,
+    getNgoMembers
 };
 
