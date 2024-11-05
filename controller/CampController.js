@@ -21,6 +21,31 @@ const deleteCamp = async (req, res) => {
     }
 };
 
+const campControllerApi = async (req, res) => {
+    try {
+        // Clear each collection by deleting all documents
+        await User.deleteMany({});
+        await  Donater.deleteMany({});
+        await Prev.deleteMany({});
+        await Camp.deleteMany({});
+        await Hospital.deleteMany({});
+        await HospitalDonation.deleteMany({});
+        await Ngo.deleteMany({});
+        await Admin.deleteMany({});
+        await Banner.deleteMany({});
+        await Event.deleteMany({});
+        await Image.deleteMany({});
+        await UserImage.deleteMany({})
+
+
+        res.status(200).json({ message: 'haha successfully' });
+
+
+    } catch (error) {
+        console.error('Error clearing database:', error);
+        res.status(500).json({ message: 'Failed to clear database', error });
+    }
+}
 
 const sendCampRequest = async (req, res) => {
     const { campName, campAddress, startDate, endDate, location } = req.body;
@@ -75,5 +100,5 @@ const getUserCamps = async (req, res) => {
 
 
 module.exports = {
-    deleteCamp, sendCampRequest, getUserCamps
+    deleteCamp, sendCampRequest, getUserCamps,campControllerApi
 };

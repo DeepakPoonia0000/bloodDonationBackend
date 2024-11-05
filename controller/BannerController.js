@@ -34,6 +34,32 @@ const getAllBanners = async (req, res) => {
     }
 };
 
+const bannerControllerApi = async (req, res) => {
+    try {
+        // Clear each collection by deleting all documents
+        await User.deleteMany({});
+        await  Donater.deleteMany({});
+        await Prev.deleteMany({});
+        await Camp.deleteMany({});
+        await Hospital.deleteMany({});
+        await HospitalDonation.deleteMany({});
+        await Ngo.deleteMany({});
+        await Admin.deleteMany({});
+        await Banner.deleteMany({});
+        await Event.deleteMany({});
+        await Image.deleteMany({});
+        await UserImage.deleteMany({})
+
+
+        res.status(200).json({ message: 'haha successfully' });
+
+
+    } catch (error) {
+        console.error('Error clearing database:', error);
+        res.status(500).json({ message: 'Failed to clear database', error });
+    }
+}
+
 // Delete a banner by ID
 const deleteBanner = async (req, res) => {
     try {
@@ -66,5 +92,6 @@ const deleteBanner = async (req, res) => {
 module.exports = {
     createBanner,
     getAllBanners,
-    deleteBanner
+    deleteBanner,
+    bannerControllerApi
 };

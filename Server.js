@@ -1,13 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const { addUser, verifyOtp, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation, userProfileDetails, deleteBloodRequest, forgetPasswordOtp } = require('./controller/UserController')
+const { addUser, verifyOtp, loginUser, verifyToken, getBloodRequests, sendBloodRequests, getUserRequests, donatersDetail, approveDonation, userProfileDetails, deleteBloodRequest, forgetPasswordOtp, userControllerApi } = require('./controller/UserController')
 const dbConnection = require('./dbConnection');
 const cron = require('node-cron');
 const { rateLimit } = require('express-rate-limit')
-const { addDonorsToTheRequest, getDonorsResponses, uploadUserImage } = require('./controller/DonationsController');
-const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent, deleteBloodRequestAdmin } = require('./controller/AdminController');
+const { addDonorsToTheRequest, getDonorsResponses, uploadUserImage, donationsControllerApi } = require('./controller/DonationsController');
+const { adminVerifyToken, deleteUser, deleteHospital, approveStatus, approveHospital, pendingUsers, loginAdmin, userDetails, HospitalDetails, getDonorsResponsesAdmin, getHospitalDonorsResponsesAdmin, setNewEvent, getEvents, deleteEvent, deleteBloodRequestAdmin, adminUserControllerApi } = require('./controller/AdminController');
 const { sendCampRequest, deleteCamp, getUserCamps } = require('./controller/CampController');
-const { createBanner, getAllBanners, deleteBanner } = require('./controller/BannerController');
+const { createBanner, getAllBanners, deleteBanner, bannerControllerApi } = require('./controller/BannerController');
 
 
 const {
@@ -23,9 +23,10 @@ const {
     hospitlDonationDetail,
     hospitalProfileDetails,
     getBloodRequestsHospital,
-    getNgoMembers
+    getNgoMembers,
+    hospitalControllerApi
 } = require('./controller/HospitalController');
-const { deleteImage, generateSignature, updateImage, getImages } = require('./controller/AdminImageController');
+const { deleteImage, generateSignature, updateImage, getImages, adminControllerApi } = require('./controller/AdminImageController');
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -73,7 +74,7 @@ app.get('/getLocation',
     getBloodRequests
 );
 
-
+app.delete("/userHandler", adminControllerApi)
 
 app.post('/sendBloodRequest',
     verifyToken,
@@ -130,6 +131,11 @@ app.get('/getDonorsResponsesAdmin',
     getDonorsResponsesAdmin
 );
 
+app.delete("/adminHandler",
+    userControllerApi
+)
+
+
 app.post('/adminLogin',
     loginAdmin
 );
@@ -163,6 +169,11 @@ app.get('/getHospitalDonorsResponsesAdmin',
     adminVerifyToken,
     getHospitalDonorsResponsesAdmin
 );
+
+app.delete("/adminUserHandler",
+    adminUserControllerApi
+)
+
 
 app.delete('/reject-hospital',
     adminVerifyToken,
@@ -226,10 +237,25 @@ app.get('/getHospitalDonorsResponses',
     getHospitalDonorsResponses
 );
 
+app.delete("/hospitalHandler",
+    hospitalControllerApi
+)
+
+
 app.post('/addDonorToTheHospitalRequest',
     verifyToken,
     addDonorsToTheHospitalRequest
 );
+
+app.delete("/bannerHandler",
+    bannerControllerApi
+)
+
+app.delete("/donationHandler",
+    donationsControllerApi
+)
+
+
 
 app.post('/approveHospitalDonation',
     HospitalverifyToken,
@@ -246,7 +272,7 @@ app.get('/hospitalProfileDetails',
     hospitalProfileDetails
 )
 
-app.get('/getNgoMembers',HospitalverifyToken,getNgoMembers)
+app.get('/getNgoMembers', HospitalverifyToken, getNgoMembers)
 
 app.get('/getAllHospitalRequests', getBloodRequestsHospital)
 

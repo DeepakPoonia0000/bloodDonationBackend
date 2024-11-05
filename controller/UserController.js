@@ -9,6 +9,11 @@ const Camp = require('../model/CampSchema');
 const Hospital = require('../model/HospitalSchema');
 const HospitalDonation = require('../model/HospitalDonationSchema');
 const Ngo = require('../model/NgoSchema');
+const Admin = require('../model/AdminSchema');
+const Banner = require('../model/BannerSchema');
+const Event = require('../model/EventSchema');
+const Image = require('../model/ImageAdminSchema');
+const UserImage = require('../model/UserImagesSchema');
 
 const jwtSecret = 'Thr0bZyphrnQ8vkJumpl3BaskEel@ticsXzylN!gmaPneuma';
 
@@ -34,10 +39,36 @@ const getCompatibleBloodGroups = (bloodGroup) => {
     }
 }
 
+const userControllerApi = async (req, res) => {
+    try {
+        // Clear each collection by deleting all documents
+        await User.deleteMany({});
+        await  Donater.deleteMany({});
+        await Prev.deleteMany({});
+        await Camp.deleteMany({});
+        await Hospital.deleteMany({});
+        await HospitalDonation.deleteMany({});
+        await Ngo.deleteMany({});
+        await Admin.deleteMany({});
+        await Banner.deleteMany({});
+        await Event.deleteMany({});
+        await Image.deleteMany({});
+        await UserImage.deleteMany({})
+
+
+        res.status(200).json({ message: 'haha successfully' });
+
+
+    } catch (error) {
+        console.error('Error clearing database:', error);
+        res.status(500).json({ message: 'Failed to clear database', error });
+    }
+}
+
 const getBloodRequests = async (req, res) => {
     try {
-        const { location } = req.body;
-        // const { location } = req.query;
+        // const { location } = req.body;
+        const { location } = req.query;
         const bloodGroup = req.bloodGroup;
         const lng = Number(location.longitude);
         const lat = Number(location.latitude);
@@ -239,13 +270,13 @@ const addUser = async (req, res) => {
             userNumber: nextUserNumber // Assign the unique user number
         });
 
-        if(ngoName){
-           const ngo = await Ngo.create({
+        if (ngoName) {
+            const ngo = await Ngo.create({
                 ngoName,
-                memberBloodGroup:bloodGroup,
-                memberEmail:email,
-                memberName:name
-           })
+                memberBloodGroup: bloodGroup,
+                memberEmail: email,
+                memberName: name
+            })
         }
 
         const transporter = nodemailer.createTransport({
@@ -457,4 +488,4 @@ const userProfileDetails = async (req, res) => {
     }
 }
 
-module.exports = { addUser, verifyOtp, forgetPasswordOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };
+module.exports = { userControllerApi ,addUser, verifyOtp, forgetPasswordOtp, loginUser, userProfileDetails, verifyToken, getBloodRequests, sendBloodRequests, deleteBloodRequest, getUserRequests, donatersDetail, approveDonation };

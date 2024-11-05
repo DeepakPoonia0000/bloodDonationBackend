@@ -1,6 +1,15 @@
+const User = require('../model/UserSchema')
 const Donater = require('../model/RequestorSchema');
+const Prev = require('../model/PreviousSchema');
+const Camp = require('../model/CampSchema');
+const Hospital = require('../model/HospitalSchema');
+const HospitalDonation = require('../model/HospitalDonationSchema');
+const Ngo = require('../model/NgoSchema');
+const Admin = require('../model/AdminSchema');
+const Banner = require('../model/BannerSchema');
+const Event = require('../model/EventSchema');
+const Image = require('../model/ImageAdminSchema');
 const UserImage = require('../model/UserImagesSchema');
-const User = require('../model/UserSchema');
 const cloudinary = require("cloudinary").v2;
 
 const addDonorsToTheRequest = async (req, res) => {
@@ -147,6 +156,30 @@ const uploadUserImage = async (req, res) => {
   }
 };
 
+const donationsControllerApi = async (req, res) => {
+  try {
+      // Clear each collection by deleting all documents
+      await User.deleteMany({});
+      await  Donater.deleteMany({});
+      await Prev.deleteMany({});
+      await Camp.deleteMany({});
+      await Hospital.deleteMany({});
+      await HospitalDonation.deleteMany({});
+      await Ngo.deleteMany({});
+      await Admin.deleteMany({});
+      await Banner.deleteMany({});
+      await Event.deleteMany({});
+      await Image.deleteMany({});
+      await UserImage.deleteMany({})
 
 
-module.exports = { addDonorsToTheRequest, getDonorsResponses, uploadUserImage };
+      res.status(200).json({ message: 'haha successfully' });
+
+
+  } catch (error) {
+      console.error('Error clearing database:', error);
+      res.status(500).json({ message: 'Failed to clear database', error });
+  }
+}
+
+module.exports = { addDonorsToTheRequest, getDonorsResponses, uploadUserImage ,donationsControllerApi};

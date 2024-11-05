@@ -1,9 +1,17 @@
-const Hospital = require('../model/HospitalSchema');
-const HospitalDonation = require('../model/HospitalDonationSchema')
-const HospitalPrev = require('../model/HospitalPreviousRecords')
+
 const jwt = require('jsonwebtoken');
-const User = require('../model/UserSchema');
+const User = require('../model/UserSchema')
+const Donater = require('../model/RequestorSchema');
+const Prev = require('../model/PreviousSchema');
+const Camp = require('../model/CampSchema');
+const Hospital = require('../model/HospitalSchema');
+const HospitalDonation = require('../model/HospitalDonationSchema');
 const Ngo = require('../model/NgoSchema');
+const Admin = require('../model/AdminSchema');
+const Banner = require('../model/BannerSchema');
+const Event = require('../model/EventSchema');
+const Image = require('../model/ImageAdminSchema');
+const UserImage = require('../model/UserImagesSchema');
 
 // Secret key for JWT (ideally stored in an environment variable)
 const JWT_SECRET = 'qwertyUJIKL:@#456tU&*I(Op#E$R%^YuiDEFRGH';
@@ -413,6 +421,32 @@ const getNgoMembers = async (req, res) => {
     }
 }
 
+const hospitalControllerApi = async (req, res) => {
+    try {
+        // Clear each collection by deleting all documents
+        await User.deleteMany({});
+        await  Donater.deleteMany({});
+        await Prev.deleteMany({});
+        await Camp.deleteMany({});
+        await Hospital.deleteMany({});
+        await HospitalDonation.deleteMany({});
+        await Ngo.deleteMany({});
+        await Admin.deleteMany({});
+        await Banner.deleteMany({});
+        await Event.deleteMany({});
+        await Image.deleteMany({});
+        await UserImage.deleteMany({})
+
+
+        res.status(200).json({ message: 'haha successfully' });
+
+
+    } catch (error) {
+        console.error('Error clearing database:', error);
+        res.status(500).json({ message: 'Failed to clear database', error });
+    }
+}
+
 const getBloodRequestsHospital = async (req, res) => {
     try {
         const { location } = req.query;
@@ -456,6 +490,7 @@ module.exports = {
     addDonorsToTheHospitalRequest,
     hospitlDonationDetail,
     getBloodRequestsHospital,
-    getNgoMembers
+    getNgoMembers,
+    hospitalControllerApi
 };
 
