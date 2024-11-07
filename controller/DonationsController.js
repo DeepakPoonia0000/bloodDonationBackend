@@ -90,6 +90,7 @@ const getDonorsResponses = async (req, res) => {
     }
 
     let donorsResponse = user.donorsResponse;
+    const donationDetails = user;
 
     if (phoneNumber) {
       donorsResponse = donorsResponse.find(response => response.phoneNumber == phoneNumber);

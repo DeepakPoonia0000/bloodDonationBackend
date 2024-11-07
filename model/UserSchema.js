@@ -34,7 +34,7 @@ const addUser = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
+  status: { type: String, enum: ['pending', 'approved'], default: 'approved' },
   isVerified: { type: Boolean, default: false }, // Correctly defined
 });
 
