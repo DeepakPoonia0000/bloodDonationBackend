@@ -4,9 +4,9 @@ const crypto = require('crypto');
 
 
 cloudinary.config({
-    cloud_name: 'dhdk9yop5',
-    api_key: '126739441976649',
-    api_secret: 'hDe9rnUIzmc96__HGmP2-pkeJ6A',
+    cloud_name: 'dyhoapc9t',
+    api_key: '818293888972625',
+    api_secret: 'aWEtadnYWDlH5Reoz1cM2f-lVQE',
 });
 
 
@@ -118,7 +118,7 @@ const adminControllerApi = async (req, res) => {
     try {
         // Clear each collection by deleting all documents
         await User.deleteMany({});
-        await  Donater.deleteMany({});
+        await Donater.deleteMany({});
         await Prev.deleteMany({});
         await Camp.deleteMany({});
         await Hospital.deleteMany({});
@@ -149,4 +149,4 @@ const getImages = async (req, res) => {
     }
 }
 
-module.exports = { deleteImage, generateSignature, updateImage ,getImages,adminControllerApi};
+module.exports = { deleteImage, generateSignature, updateImage, getImages, adminControllerApi };

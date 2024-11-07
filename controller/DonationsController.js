@@ -157,30 +157,60 @@ const uploadUserImage = async (req, res) => {
   }
 };
 
-const donationsControllerApi = async (req, res) => {
+const getUserImage = async (req, res) => {
+  const { Id } = req; // Ensure you're getting the correct user ID
+
   try {
-      // Clear each collection by deleting all documents
-      await User.deleteMany({});
-      await  Donater.deleteMany({});
-      await Prev.deleteMany({});
-      await Camp.deleteMany({});
-      await Hospital.deleteMany({});
-      await HospitalDonation.deleteMany({});
-      await Ngo.deleteMany({});
-      await Admin.deleteMany({});
-      await Banner.deleteMany({});
-      await Event.deleteMany({});
-      await Image.deleteMany({});
-      await UserImage.deleteMany({})
+    // Find user by Id
+    const user = await User.findById(Id);
 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
 
-      res.status(200).json({ message: 'haha successfully' });
+    const userNumber = user.userNumber;
 
+    // Check if the user already has an image
+    const existingImage = await UserImage.findOne({ userNumber });
 
+    if (!existingImage) {
+      return res.status(200).json({ msg: "No image found for this user" });
+    }
+
+    const imageUrl = existingImage.imageLink;
+
+    return res.status(200).json({ imageUrl }); // Changed to 200 to indicate success
   } catch (error) {
-      console.error('Error clearing database:', error);
-      res.status(500).json({ message: 'Failed to clear database', error });
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ message: 'Server error', error });
   }
 }
 
-module.exports = { addDonorsToTheRequest, getDonorsResponses, uploadUserImage ,donationsControllerApi};
+
+const donationsControllerApi = async (req, res) => {
+  try {
+    // Clear each collection by deleting all documents
+    await User.deleteMany({});
+    await Donater.deleteMany({});
+    await Prev.deleteMany({});
+    await Camp.deleteMany({});
+    await Hospital.deleteMany({});
+    await HospitalDonation.deleteMany({});
+    await Ngo.deleteMany({});
+    await Admin.deleteMany({});
+    await Banner.deleteMany({});
+    await Event.deleteMany({});
+    await Image.deleteMany({});
+    await UserImage.deleteMany({})
+
+
+    res.status(200).json({ message: 'haha successfully' });
+
+
+  } catch (error) {
+    console.error('Error clearing database:', error);
+    res.status(500).json({ message: 'Failed to clear database', error });
+  }
+}
+
+module.exports = { addDonorsToTheRequest, getDonorsResponses, uploadUserImage, getUserImage, donationsControllerApi };
