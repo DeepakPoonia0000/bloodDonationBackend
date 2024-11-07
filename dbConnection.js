@@ -3,9 +3,9 @@
 const mongoose = require('mongoose');
 
 const dbConnection = async () => {
-    
+
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/localBlood');
+        await mongoose.connect('mongodb+srv://meharetech420:hsRglchyifbiCf6a@cluster0.y7pmv.mongodb.net/Blood');
         console.log('Connected to database');
     } catch (error) {
         console.error('Database connection error:', error);
