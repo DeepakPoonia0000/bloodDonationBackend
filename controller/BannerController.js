@@ -4,9 +4,9 @@ const Banner = require('../model/BannerSchema'); // Adjust the path as necessary
 const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-    cloud_name: 'dhdk9yop5',
-    api_key: '126739441976649',
-    api_secret: 'hDe9rnUIzmc96__HGmP2-pkeJ6A',
+    cloud_name: 'dyhoapc9t',
+    api_key: '818293888972625',
+    api_secret: 'aWEtadnYWDlH5Reoz1cM2f-lVQE',
 });
 
 // Create a new banner
